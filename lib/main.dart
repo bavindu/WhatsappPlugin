@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_plugin/routes/router.dart';
+import 'package:whatsapp_plugin/views/image_preview_view.dart';
 import 'package:whatsapp_plugin/views/main_view.dart';
 
-import 'models/images_model.dart';
+import 'view_models/images_model.dart';
 
 
 
@@ -26,7 +27,10 @@ class _MyAppState extends State<MyApp> {
       child: Container(
         child: MaterialApp(
           initialRoute: '/',
-          onGenerateRoute: Router.generateRoute,
+          routes: {
+            '/': (context) => MainView(),
+            '/imagePreiew': (context) => ImagePreview(),
+          },
         ),
         padding: const EdgeInsets.only(bottom: 50),
       ),

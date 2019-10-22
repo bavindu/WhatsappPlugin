@@ -9,6 +9,10 @@ class Router {
         return MaterialPageRoute(builder: (_) => MainView());
       case '/imagePreiew':
         return MaterialPageRoute(builder: (_) => ImagePreview());
+      default:
+        return MaterialPageRoute(builder: (_) => Scaffold(
+          body: Center(child: Text('No route for ${settings.name}'),),
+        ));
     }
   }
 }
