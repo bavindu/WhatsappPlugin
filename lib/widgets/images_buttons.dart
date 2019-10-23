@@ -15,10 +15,11 @@ class ImagesButton extends StatelessWidget {
         ),
         IconButton(
           icon: Icon(Icons.save),
-          onPressed: () {},
+          onPressed: () { Provider.of<ImagesViewModel>(context, listen: false).saveImages(); },
           tooltip: "Save",
           color: Colors.white,
-        )
+        ),
+        
       ],
     );
   }
