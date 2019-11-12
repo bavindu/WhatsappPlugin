@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_plugin/constants/app-storage.dart';
-import 'package:whatsapp_plugin/constants/images_view_states.dart';
+import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/models/image.dart';
 
 
 class ImagesViewModel with ChangeNotifier {
-  List<StatusImage> _imgList = List();
-  ImagesViewState _imageViewState = ImagesViewState.Idle;
+  List<StatusImage> _imgFileList = List();
+  ViewState _imageViewState = ViewState.Idle;
   List<File> _selectedImageList = List();
   bool _selectingMode = false;
 
@@ -19,33 +19,27 @@ class ImagesViewModel with ChangeNotifier {
   }
 
   bool get selectingMode => _selectingMode;
-  ImagesViewState get imageViewState => _imageViewState;
-  List<StatusImage> get imgFileList => _imgList;
+  ViewState get imageViewState => _imageViewState;
+  List<StatusImage> get imgFileList => _imgFileList;
 
   ImagesViewModel(){
     getImages();
   }
 
   void getImages() {
-    _imageViewState = ImagesViewState.Busy;
-    if (_imgList.length > 0) {
-      _imgList.clear();
+    _imageViewState = ViewState.Busy;
+    if (_imgFileList.length > 0) {
+      _imgFileList.clear();
     }
     Directory dir = new Directory(WHATSAPP_STATUS_PATH);
-    dir.list(recursive: true, followLinks: false)
-        .listen((FileSystemEntity entity) {
-      if (entity.path.endsWith("jpg")) {
-        File img = entity as File;
-        _imgList.add(new StatusImage(img));
+    var fileList= dir.listSync().where((item)=> item.path.endsWith('jpg'));
+    for (var i = 0; i < fileList.length; i++) {
+      _imgFileList.add(new StatusImage(fileList.elementAt(i)));
+      if (i == fileList.length -1) {
+        _imageViewState = ViewState.Idle;
+        notifyListeners();
       }
-
-    },
-        onDone: (){
-          _imageViewState = ImagesViewState.Idle;
-          notifyListeners();
-        }
-    );
-
+    }
   }
   void tapOnImage(int index) {
     if (imgFileList[index].isSelected) {
@@ -66,19 +60,19 @@ class ImagesViewModel with ChangeNotifier {
       }
 
     } else {
-      _selectedImageList.add(_imgList[index].imageFile);
-      _imgList[index].toggleSelection();
+      _selectedImageList.add(_imgFileList[index].imageFile);
+      _imgFileList[index].toggleSelection();
     }
     notifyListeners();
   }
   void longPressed(int index){
     if (selectingMode == false) {
       selectingMode = true;
-      _selectedImageList.add(_imgList[index].imageFile);
-      _imgList[index].toggleSelection();
+      _selectedImageList.add(_imgFileList[index].imageFile);
+      _imgFileList[index].toggleSelection();
     } else {
-      _selectedImageList.add(_imgList[index].imageFile);
-      _imgList[index].toggleSelection();
+      _selectedImageList.add(_imgFileList[index].imageFile);
+      _imgFileList[index].toggleSelection();
     }
     notifyListeners();
 

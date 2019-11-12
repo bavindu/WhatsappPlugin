@@ -1,20 +1,34 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_isolate/flutter_isolate.dart';
+import 'package:flutter_video_compress/flutter_video_compress.dart';
+import 'package:thumbnails/thumbnails.dart';
 import 'package:whatsapp_plugin/constants/app-storage.dart';
+import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/models/statusVideo.dart';
+import 'package:whatsapp_plugin/utils/android_bridge.dart';
 
 class VideosViewModel with ChangeNotifier {
-
   List<StatusVideo> _videosList = List();
+  List<File> _videoFileList = List();
+
   bool _selectingMode = false;
+  ViewState _videoViewState = ViewState.Idle;
+  List<File> get videoFileList => _videoFileList;
+  static final  _flutterVideoCompress = FlutterVideoCompress();
+
+
 
   VideosViewModel() {
     getVideos();
   }
 
-
-
+  ViewState get videoViewState => _videoViewState;
   bool get selectingMode => _selectingMode;
 
   set selectingMode(bool value) {
@@ -24,22 +38,53 @@ class VideosViewModel with ChangeNotifier {
   List<StatusVideo> get videosList => _videosList;
 
   void getVideos() {
-    if (videosList.length> 0) {
-      videosList.clear();
+    _videoViewState = ViewState.Busy;
+    if (_videosList.length > 0) {
+      _videosList.clear();
     }
     Directory dir = new Directory(WHATSAPP_STATUS_PATH);
-    dir.list(recursive: true, followLinks: false)
-        .listen((FileSystemEntity entity) {
-      if (entity.path.endsWith("mp4")) {
-        File video = entity as File;
-        videosList.add(StatusVideo(video));
+    var fileList = dir.listSync().where((item)=> item.path.endsWith('mp4'));
+    for(var i = 0; i< fileList.length; i++) {
+      print(fileList.elementAt(i).path);
+      _videoFileList.add(fileList.elementAt(i));
+      if(i == fileList.length-1) {
+        _videoViewState = ViewState.Idle;
+        notifyListeners();
       }
-
-    },
-        onDone: (){
-          notifyListeners();
-        }
-    );
+    }
   }
 
+  static Future<Uint8List> getThumbnail(File video) async {
+    Uint8List unit8list = await _flutterVideoCompress.getThumbnail(video.path,
+        quality: 50, // default(100)
+        position: -1);
+    return unit8list;
+
+  }
+
+  getImageFromVideo(String videoFilePath) async{
+    await Future.delayed(Duration(milliseconds: 1000));
+    String thumb = await Thumbnails.getThumbnail(videoFile: videoFilePath, imageType: ThumbFormat.PNG, quality: 5);
+    return thumb;
+  }
+
+//  Future _getImageFromVideoFile () async {
+//    if (_videosList.length > 0) {
+//      _videosList.clear();
+//    }
+//      for (var i = 0; i < _videoFileList.length; i++ ) {
+//        var videoFile = _videoFileList[i];
+//        final uint8list = await _flutterVideoCompress.getThumbnail(
+//            videoFile.path,
+//            quality: 50, // default(100)
+//            position: -1 // default(-1)
+//        );
+//        StatusVideo statusVideo = new StatusVideo(videoFile);
+//        statusVideo.image = Image.memory(uint8list, fit: BoxFit.cover,);
+//        _videosList.add(statusVideo);
+//        if (i == _videoFileList.length - 1) {
+//          _videoViewState = ViewState.Idle;
+//          notifyListeners();
+//        }
+//    }
 }

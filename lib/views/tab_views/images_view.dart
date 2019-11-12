@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:whatsapp_plugin/constants/images_view_states.dart';
+import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/view_models/images_model.dart';
 
 class ImagesView extends StatefulWidget {
@@ -30,7 +30,7 @@ class _ImagesViewState extends State<ImagesView> with WidgetsBindingObserver {
       builder: (BuildContext context, ImagesViewModel imageViewModel,
               Widget child) =>
           Container(
-        child: imageViewModel.imageViewState == ImagesViewState.Busy
+        child: imageViewModel.imageViewState == ViewState.Busy
             ? Center(
                 child: CircularProgressIndicator(),
               )

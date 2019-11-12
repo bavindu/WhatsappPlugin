@@ -1,4 +1,0 @@
-enum ImagesViewState {
-  Idle,
-  Busy
-}
