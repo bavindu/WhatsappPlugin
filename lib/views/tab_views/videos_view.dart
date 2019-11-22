@@ -38,25 +38,11 @@ class _VideosViewState extends State<VideosView> with WidgetsBindingObserver {
                 child: CircularProgressIndicator(),
               )
             : GridView.count(
-                crossAxisCount: 2,
+                crossAxisCount: 1,
                 children:
                     List.generate(videosViewModel.videoFileList.length, (index) {
                   return GridTile(
-                    child: FutureBuilder(
-                        future: videosViewModel.getImageFromVideo(videosViewModel.videoFileList[index].path),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.done) {
-                            if (snapshot.hasData) {
-                              return Container(
-                                child: Image.file(File(snapshot.data),fit: BoxFit.cover,),
-                              );
-                            } else {
-                              return Center( child: CircularProgressIndicator(),);
-                            }
-                          } else {
-                            return Center (child: CircularProgressIndicator(),);
-                          }
-                        }),
+                    child: Container(child: VideoGridItem(videosViewModel.videoFileList[index]),padding: EdgeInsets.all(5.0),)
                   );
                 }),
               ),

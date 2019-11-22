@@ -17,8 +17,9 @@ class _VideoGridItemState extends State<VideoGridItem> {
   @override
   void initState() {
     print('file://${widget.videoFile.path}');
-    _videoPlayerController = VideoPlayerController.file(widget.videoFile)..initialize();
-    // _initializeVideoPlayerFuture = _videoPlayerController.initialize();
+    _videoPlayerController = VideoPlayerController.file(File("storage/"+widget.videoFile.path));
+    _initializeVideoPlayerFuture = _videoPlayerController.initialize();
+    _videoPlayerController.setLooping(true);
     super.initState();
   }
 
@@ -31,9 +32,15 @@ class _VideoGridItemState extends State<VideoGridItem> {
   Widget build(BuildContext context) {
     return Container(
       child: Center(
-        child: AspectRatio(aspectRatio: _videoPlayerController.value.aspectRatio,child: Container(
-          child: VideoPlayer(_videoPlayerController) ,
-        ),),
+        child: FutureBuilder(future:_initializeVideoPlayerFuture,builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return AspectRatio(aspectRatio: _videoPlayerController.value.aspectRatio,child: Container(
+              child: VideoPlayer(_videoPlayerController) ,
+            ),);
+          } else {
+            return CircularProgressIndicator();
+          }
+        }),
       ),
     );
   }
