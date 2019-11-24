@@ -35,55 +35,62 @@ class _ImagesViewState extends State<ImagesView> with WidgetsBindingObserver {
                 child: CircularProgressIndicator(),
               )
             : Container(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  children:
-                      List.generate(imageViewModel.imgFileList.length, (index) {
-                    return GridTile(
-                      child: GestureDetector(
-                        child: Container(
-                          child: imageViewModel.imgFileList[index].isSelected
-                              ? Stack(
-                                  fit: StackFit.expand,
-                                  children: <Widget>[
-                                    Container(
-                                      child: Opacity(
-                                        opacity: 0.5,
-                                        child: Image.file(
-                                          imageViewModel
-                                              .imgFileList[index].imageFile,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                    Icon(
-                                      Icons.check,
-                                      color: Colors.white,
-                                      size: 80.0,
-                                    )
-                                  ],
-                                )
-                              : Image.file(
-                                  imageViewModel.imgFileList[index].imageFile,
-                                  fit: BoxFit.cover,
-                                ),
-                          padding: EdgeInsets.all(2.0),
-                        ),
-                        onTap: () {
-                          if (imageViewModel.selectingMode){
-                            imageViewModel.tapOnImage(index);
-                          } else {
-                            Navigator.pushNamed(context, '/imagePreiew',
-                                arguments: index);
-                          }
-                        },
-                        onLongPress: () {
-                          imageViewModel.longPressed(index);
-                        },
+                child: imageViewModel.imgFileList.length > 0
+                    ? GridView.count(
+                        crossAxisCount: 2,
+                        children: List.generate(
+                            imageViewModel.imgFileList.length, (index) {
+                          return GridTile(
+                            child: GestureDetector(
+                              child: Container(
+                                child:
+                                    imageViewModel.imgFileList[index].isSelected
+                                        ? Stack(
+                                            fit: StackFit.expand,
+                                            children: <Widget>[
+                                              Container(
+                                                child: Opacity(
+                                                  opacity: 0.5,
+                                                  child: Image.file(
+                                                    imageViewModel
+                                                        .imgFileList[index]
+                                                        .imageFile,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                                size: 80.0,
+                                              )
+                                            ],
+                                          )
+                                        : Image.file(
+                                            imageViewModel
+                                                .imgFileList[index].imageFile,
+                                            fit: BoxFit.cover,
+                                          ),
+                                padding: EdgeInsets.all(2.0),
+                              ),
+                              onTap: () {
+                                if (imageViewModel.selectingMode) {
+                                  imageViewModel.tapOnImage(index);
+                                } else {
+                                  Navigator.pushNamed(context, '/imagePreiew',
+                                      arguments: index);
+                                }
+                              },
+                              onLongPress: () {
+                                imageViewModel.longPressed(index);
+                              },
+                            ),
+                          );
+                        }),
+                      )
+                    : Center(
+                        child: Image.asset('assets/images/no_data.png'),
                       ),
-                    );
-                  }),
-                ),
               ),
       ),
     );

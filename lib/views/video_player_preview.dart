@@ -24,7 +24,7 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
     super.initState();
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      aspectRatio: _videoPlayerController.value.aspectRatio,
+      aspectRatio: _videoPlayerController.value.aspectRatio
     );
   }
 
@@ -39,9 +39,17 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Chewie(
-          controller: _chewieController,
-        ),
+        child: FutureBuilder(
+          future: _initializeVideoPlayerFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return Chewie(
+                controller: _chewieController,
+              );
+            } else {
+              return CircularProgressIndicator();
+            }
+          }),
       ),
     );
   }

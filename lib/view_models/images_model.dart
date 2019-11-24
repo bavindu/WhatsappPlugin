@@ -33,12 +33,17 @@ class ImagesViewModel with ChangeNotifier {
     }
     Directory dir = new Directory(WHATSAPP_STATUS_PATH);
     var fileList= dir.listSync().where((item)=> item.path.endsWith('jpg'));
-    for (var i = 0; i < fileList.length; i++) {
-      _imgFileList.add(new StatusImage(fileList.elementAt(i)));
-      if (i == fileList.length -1) {
-        _imageViewState = ViewState.Idle;
-        notifyListeners();
+    if (fileList.length>0) {
+      for (var i = 0; i < fileList.length; i++) {
+        _imgFileList.add(new StatusImage(fileList.elementAt(i)));
+        if (i == fileList.length -1) {
+          _imageViewState = ViewState.Idle;
+          notifyListeners();
+        }
       }
+    } else {
+      _imageViewState = ViewState.Idle;
+      notifyListeners();
     }
   }
   void tapOnImage(int index) {
@@ -96,23 +101,31 @@ class ImagesViewModel with ChangeNotifier {
     notifyListeners();
   }
   
-  void saveImages() {
+  void saveFiles() {
     _selectedImageList.forEach((imageFile){
       String imagePath = imageFile.path;
       String imageName = imagePath.split('/').last;
       String savePath = SAVE_PATH + imageName;
       print(savePath);
-      imageFile.copy(savePath).catchError((error){
+      try {
+        imageFile.copySync(savePath);
+      } catch (error) {
         if ( error is FileSystemException) {
           new Directory(SAVE_PATH).create();
           imageFile.copy(savePath);
         }
-      });
-      try {
-
-      } on FileSystemException  catch (e) {
-
       }
     });
+    this.handleTabChange();
   }
+
+  void handleTabChange() {
+    _selectingMode = false;
+    _selectedImageList.clear();
+    imgFileList.forEach((image){
+      image.isSelected = false;
+    });
+    notifyListeners();
+  }
+
 }

@@ -45,7 +45,6 @@ class _VideoGridItemState extends State<VideoGridItem> {
                       child: VideoPlayer(_videoPlayerController),
                     ),
                   ),
-                  onTap: navigate,
                 );
               } else {
                 return CircularProgressIndicator();
@@ -63,9 +62,5 @@ class _VideoGridItemState extends State<VideoGridItem> {
         _videoPlayerController.play();
       }
     });
-  }
-
-  void navigate() {
-    Navigator.push(context, MaterialPageRoute(builder: (context)=> VideoPlayerPreview(widget.videoFile)));
   }
 }

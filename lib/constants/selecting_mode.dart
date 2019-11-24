@@ -1,0 +1,4 @@
+enum SelectingMode{
+  ImageMode,
+  VideoMode
+}

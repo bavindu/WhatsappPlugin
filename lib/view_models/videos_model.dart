@@ -9,16 +9,16 @@ import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:whatsapp_plugin/constants/app-storage.dart';
 import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/models/statusVideo.dart';
-import 'package:whatsapp_plugin/utils/android_bridge.dart';
+
 
 class VideosViewModel with ChangeNotifier {
   List<StatusVideo> _videosList = List();
-  List<File> _videoFileList = List();
+  List<File> _selectedVideoList = List();
 
   bool _selectingMode = false;
   ViewState _videoViewState = ViewState.Idle;
-  List<File> get videoFileList => _videoFileList;
-  static final  _flutterVideoCompress = FlutterVideoCompress();
+  List<File> get selectedVideoList => _selectedVideoList;
+
 
 
 
@@ -37,27 +37,103 @@ class VideosViewModel with ChangeNotifier {
 
   void getVideos() {
     _videoViewState = ViewState.Busy;
-    if (videoFileList.length > 0) {
-      videoFileList.clear();
+    if (_videosList.length > 0) {
+      _videosList.clear();
     }
     Directory dir = new Directory(WHATSAPP_STATUS_PATH);
     var fileList = dir.listSync().where((item)=> item.path.endsWith('mp4'));
-    for(var i = 0; i< fileList.length; i++) {
-      print(fileList.elementAt(i).path);
-      _videoFileList.add(fileList.elementAt(i));
-      if(i == fileList.length-1) {
-        _videoViewState = ViewState.Idle;
-        notifyListeners();
+    if (fileList.length > 0) {
+      for(var i = 0; i< fileList.length; i++) {
+        print(fileList.elementAt(i).path);
+        _videosList.add(new StatusVideo(fileList.elementAt(i)));
+        if(i == fileList.length-1) {
+          _videoViewState = ViewState.Idle;
+          notifyListeners();
+        }
       }
+    } else {
+      _videoViewState = ViewState.Idle;
+      notifyListeners();
     }
   }
 
-  static Future<Uint8List> getThumbnail(File video) async {
-    Uint8List unit8list = await _flutterVideoCompress.getThumbnail(video.path,
-        quality: 50, // default(100)
-        position: -1);
-    return unit8list;
-
+  void tapOnVideo(int index) {
+    if (_videosList[index].isSelected == false) {
+      _selectingMode = true;
+      _selectedVideoList.add(_videosList[index].videoFile);
+      _videosList[index].isSelected = true;
+    } else {
+      var deleteIndex;
+      for(int i = 0; i < _selectedVideoList.length; i++) {
+        if (_selectedVideoList[i] == videosList[index].videoFile) {
+          deleteIndex = i;
+          break;
+        }
+      }
+      if (deleteIndex != null) {
+        _videosList[index].isSelected = false;
+        _selectedVideoList.removeAt(deleteIndex);
+      }
+      if (_selectedVideoList.length == 0 && _selectingMode == true) {
+        _selectingMode = false;
+      }
+    }
+    notifyListeners();
   }
+
+  void longPressed(int index) {
+    if (_selectingMode == false) {
+      _selectingMode = true;
+      _videosList[index].isSelected = true;
+      _selectedVideoList.add(_videosList[index].videoFile);
+    } else {
+      tapOnVideo(index);
+    }
+    notifyListeners();
+  }
+
+  void saveFiles() {
+    _selectedVideoList.forEach((videoFile) {
+      String videoName = videoFile.path.split('/').last;
+      String savePath = SAVE_PATH + videoName;
+      try {
+        videoFile.copySync(savePath);
+      } catch (error) {
+        if ( error is FileSystemException) {
+          new Directory(SAVE_PATH).create();
+          videoFile.copy(savePath);
+        }
+      }
+    });
+    handleTabChange();
+  }
+
+  void handleTabChange() {
+    _selectingMode = false;
+    _selectedVideoList.clear();
+    videosList.forEach((video){
+      video.isSelected = false;
+    });
+    notifyListeners();
+  }
+
+  void selectAll() {
+    if (_selectedVideoList.length > 0) {
+      _selectedVideoList.clear();
+      _videosList.forEach((video) {
+        video.isSelected = true;
+        _selectedVideoList.add(video.videoFile);
+      });
+    } else {
+      _selectingMode = false;
+      _selectedVideoList.clear();
+      _videosList.forEach((video) {
+        video.isSelected = false;
+      });
+    }
+    notifyListeners();
+  }
+
+
 
 }

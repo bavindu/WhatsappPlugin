@@ -6,6 +6,8 @@ import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/view_models/videos_model.dart';
 import 'package:whatsapp_plugin/widgets/video_grid_item.dart';
 
+import '../video_player_preview.dart';
+
 class VideosView extends StatefulWidget {
   @override
   _VideosViewState createState() => _VideosViewState();
@@ -37,18 +39,59 @@ class _VideosViewState extends State<VideosView> with WidgetsBindingObserver {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : GridView.count(
-                crossAxisCount: 2,
-                children: List.generate(videosViewModel.videoFileList.length,
-                    (index) {
-                  return GridTile(
-                      child: Container(
-                    child: VideoGridItem(videosViewModel.videoFileList[index]),
-                    padding: EdgeInsets.all(2.0),
-                  ));
-                }),
+            : videosViewModel.videosList.length > 0 ?
+        GridView.count(
+          crossAxisCount: 2,
+          children:
+          List.generate(videosViewModel.videosList.length, (index) {
+            return GridTile(
+              child: GestureDetector(
+                child: Container(
+                  child: videosViewModel.videosList[index].isSelected
+                      ? Stack(
+                    fit: StackFit.expand,
+                    children: <Widget>[
+                      Container(
+                        child: Opacity(
+                          opacity: 0.5,
+                          child: VideoGridItem(videosViewModel
+                              .videosList[index].videoFile),
+                        ),
+                      ),
+                      Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 80.0,
+                      )
+                    ],
+                  )
+                      : VideoGridItem(
+                      videosViewModel.videosList[index].videoFile),
+                  padding: EdgeInsets.all(2.0),
+                ),
+                onTap: () {
+                  if (videosViewModel.selectingMode == true) {
+                    videosViewModel.tapOnVideo(index);
+                  } else {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> VideoPlayerPreview(videosViewModel.videosList[index].videoFile)));
+                  }
+                },
+                onLongPress: () {
+                  videosViewModel.longPressed(index);
+                },
               ),
+            );
+          }),
+        )
+            :
+            Center(child: Image.asset('assets/images/no_data.png'),)
       ),
     );
   }
 }
+
+//Container(
+//child: VideoGridItem(
+//videosViewModel.videosList[index].videoFile),
+//padding: EdgeInsets.all(2.0),
+//)
