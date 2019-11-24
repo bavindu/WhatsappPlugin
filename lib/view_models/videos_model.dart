@@ -5,9 +5,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_isolate/flutter_isolate.dart';
 import 'package:flutter_video_compress/flutter_video_compress.dart';
-import 'package:thumbnails/thumbnails.dart';
 import 'package:whatsapp_plugin/constants/app-storage.dart';
 import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/models/statusVideo.dart';
@@ -39,8 +37,8 @@ class VideosViewModel with ChangeNotifier {
 
   void getVideos() {
     _videoViewState = ViewState.Busy;
-    if (_videosList.length > 0) {
-      _videosList.clear();
+    if (videoFileList.length > 0) {
+      videoFileList.clear();
     }
     Directory dir = new Directory(WHATSAPP_STATUS_PATH);
     var fileList = dir.listSync().where((item)=> item.path.endsWith('mp4'));
@@ -62,29 +60,4 @@ class VideosViewModel with ChangeNotifier {
 
   }
 
-  getImageFromVideo(String videoFilePath) async{
-    await Future.delayed(Duration(milliseconds: 1000));
-    String thumb = await Thumbnails.getThumbnail(videoFile: videoFilePath, imageType: ThumbFormat.PNG, quality: 5);
-    return thumb;
-  }
-
-//  Future _getImageFromVideoFile () async {
-//    if (_videosList.length > 0) {
-//      _videosList.clear();
-//    }
-//      for (var i = 0; i < _videoFileList.length; i++ ) {
-//        var videoFile = _videoFileList[i];
-//        final uint8list = await _flutterVideoCompress.getThumbnail(
-//            videoFile.path,
-//            quality: 50, // default(100)
-//            position: -1 // default(-1)
-//        );
-//        StatusVideo statusVideo = new StatusVideo(videoFile);
-//        statusVideo.image = Image.memory(uint8list, fit: BoxFit.cover,);
-//        _videosList.add(statusVideo);
-//        if (i == _videoFileList.length - 1) {
-//          _videoViewState = ViewState.Idle;
-//          notifyListeners();
-//        }
-//    }
 }

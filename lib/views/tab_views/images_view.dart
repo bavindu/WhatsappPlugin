@@ -74,7 +74,7 @@ class _ImagesViewState extends State<ImagesView> with WidgetsBindingObserver {
                             imageViewModel.tapOnImage(index);
                           } else {
                             Navigator.pushNamed(context, '/imagePreiew',
-                                arguments: imageViewModel.imgFileList[index].imageFile);
+                                arguments: index);
                           }
                         },
                         onLongPress: () {

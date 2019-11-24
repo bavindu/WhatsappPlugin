@@ -6,11 +6,11 @@ class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => MainView());
+        return MaterialPageRoute(builder: (context) => MainView());
       case '/imagePreiew':
-        return MaterialPageRoute(builder: (_) => ImagePreview());
+        return MaterialPageRoute(builder: (context) => ImagePreview(settings.arguments));
       default:
-        return MaterialPageRoute(builder: (_) => Scaffold(
+        return MaterialPageRoute(builder: (context) => Scaffold(
           body: Center(child: Text('No route for ${settings.name}'),),
         ));
     }

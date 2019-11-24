@@ -8,6 +8,7 @@ import 'package:whatsapp_plugin/routes/router.dart';
 import 'package:whatsapp_plugin/view_models/videos_model.dart';
 import 'package:whatsapp_plugin/views/image_preview_view.dart';
 import 'package:whatsapp_plugin/views/main_view.dart';
+import 'package:whatsapp_plugin/views/video_player_preview.dart';
 
 import 'view_models/images_model.dart';
 
@@ -35,10 +36,7 @@ class _MyAppState extends State<MyApp> {
       child: Container(
         child: MaterialApp(
           initialRoute: '/',
-          routes: {
-            '/': (context) => MainView(),
-            '/imagePreiew': (context) => ImagePreview(),
-          },
+          onGenerateRoute: Router.generateRoute,
         ),
         padding: const EdgeInsets.only(bottom: 50),
       ),
