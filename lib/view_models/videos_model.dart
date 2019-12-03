@@ -5,7 +5,6 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:whatsapp_plugin/constants/app-storage.dart';
 import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/models/statusVideo.dart';
