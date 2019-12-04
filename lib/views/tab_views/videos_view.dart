@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_plugin/constants/view_states.dart';
@@ -40,10 +38,10 @@ class _VideosViewState extends State<VideosView> with WidgetsBindingObserver {
                 child: CircularProgressIndicator(),
               )
             : videosViewModel.videosList.length > 0 ?
-        GridView.count(
-          crossAxisCount: 2,
-          children:
-          List.generate(videosViewModel.videosList.length, (index) {
+        GridView.builder(
+          itemCount: videosViewModel.videosList.length,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
+          itemBuilder: (BuildContext context, int index){
             return GridTile(
               child: GestureDetector(
                 child: Container(
@@ -80,8 +78,8 @@ class _VideosViewState extends State<VideosView> with WidgetsBindingObserver {
                   videosViewModel.longPressed(index);
                 },
               ),
-            );
-          }),
+            ); 
+          },
         )
             :
             Center(child: Image.asset('assets/images/no_data.png'),)
@@ -90,8 +88,4 @@ class _VideosViewState extends State<VideosView> with WidgetsBindingObserver {
   }
 }
 
-//Container(
-//child: VideoGridItem(
-//videosViewModel.videosList[index].videoFile),
-//padding: EdgeInsets.all(2.0),
-//)
+

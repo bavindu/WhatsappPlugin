@@ -38,6 +38,7 @@ class _MainViewState extends State<MainView> with SingleTickerProviderStateMixin
   }
 
   void handleTabChange() {
+    print('tab swiped');
     if (_tabController.index == 1) {
       Provider.of<ImagesViewModel>(context, listen: true).handleTabChange();
     } else {

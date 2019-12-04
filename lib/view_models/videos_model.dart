@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -108,6 +106,7 @@ class VideosViewModel with ChangeNotifier {
   }
 
   void handleTabChange() {
+    print("handling image tab change");
     _selectingMode = false;
     _selectedVideoList.clear();
     videosList.forEach((video){

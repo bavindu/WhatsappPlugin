@@ -15,9 +15,12 @@ class _ImagesViewState extends State<ImagesView> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
+  @override
+  
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    print("state = $state");
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed && context != null) {
       Provider.of<ImagesViewModel>(context, listen: false).getImages();
@@ -36,11 +39,11 @@ class _ImagesViewState extends State<ImagesView> with WidgetsBindingObserver {
               )
             : Container(
                 child: imageViewModel.imgFileList.length > 0
-                    ? GridView.count(
-                        crossAxisCount: 2,
-                        children: List.generate(
-                            imageViewModel.imgFileList.length, (index) {
-                          return GridTile(
+                    ? GridView.builder(
+                      itemCount: imageViewModel.imgFileList.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                      itemBuilder: (BuildContext context, int index){
+                        return GridTile(
                             child: GestureDetector(
                               child: Container(
                                 child:
@@ -86,8 +89,8 @@ class _ImagesViewState extends State<ImagesView> with WidgetsBindingObserver {
                               },
                             ),
                           );
-                        }),
-                      )
+                      },
+                    )
                     : Center(
                         child: Image.asset('assets/images/no_data.png'),
                       ),
@@ -96,3 +99,4 @@ class _ImagesViewState extends State<ImagesView> with WidgetsBindingObserver {
     );
   }
 }
+

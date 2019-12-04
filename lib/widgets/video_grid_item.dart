@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
-import 'package:whatsapp_plugin/views/video_player_preview.dart';
 
 class VideoGridItem extends StatefulWidget {
   final File videoFile;
@@ -16,11 +15,11 @@ class _VideoGridItemState extends State<VideoGridItem> {
   Future<void> _initializeVideoPlayerFuture;
   @override
   void initState() {
-    print('file://${widget.videoFile.path}');
     _videoPlayerController =
         VideoPlayerController.file(File("storage/" + widget.videoFile.path));
     _initializeVideoPlayerFuture = _videoPlayerController.initialize();
     _videoPlayerController.setLooping(true);
+    print("**********************"+ _videoPlayerController.value.aspectRatio.toString());
     super.initState();
   }
 
@@ -40,7 +39,7 @@ class _VideoGridItemState extends State<VideoGridItem> {
               if (snapshot.connectionState == ConnectionState.done) {
                 return InkWell(
                   child: AspectRatio(
-                    aspectRatio: 1 / 1,
+                    aspectRatio: _videoPlayerController.value.aspectRatio,
                     child: Container(
                       child: VideoPlayer(_videoPlayerController),
                     ),

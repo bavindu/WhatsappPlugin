@@ -6,10 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:whatsapp_plugin/constants/app-storage.dart';
 import 'package:whatsapp_plugin/routes/router.dart';
 import 'package:whatsapp_plugin/view_models/videos_model.dart';
-import 'package:whatsapp_plugin/views/image_preview_view.dart';
-import 'package:whatsapp_plugin/views/main_view.dart';
-import 'package:whatsapp_plugin/views/video_player_preview.dart';
-
 import 'view_models/images_model.dart';
 
 
