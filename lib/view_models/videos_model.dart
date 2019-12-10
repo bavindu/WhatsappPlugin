@@ -7,7 +7,7 @@ import 'package:whatsapp_plugin/constants/app-storage.dart';
 import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/models/statusVideo.dart';
 
-
+ 
 class VideosViewModel with ChangeNotifier {
   List<StatusVideo> _videosList = List();
   List<File> _selectedVideoList = List();

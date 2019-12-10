@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_plugin/constants/selecting_mode.dart';
+import 'package:whatsapp_plugin/localization/app_localization.dart';
 import 'package:whatsapp_plugin/view_models/images_model.dart';
 import 'package:whatsapp_plugin/view_models/videos_model.dart';
 import 'package:whatsapp_plugin/views/tab_views/chat_view.dart';
@@ -54,16 +55,18 @@ class _MainViewState extends State<MainView> with SingleTickerProviderStateMixin
           buildActionButton(context)
         ],
         bottom: TabBar(
+          labelColor: Colors.white,
+          indicatorColor: Colors.white,
           controller: _tabController,
           tabs: [
             Tab(
-              text: "Chats",
+              text: AppLocalizations.of(context).localizedValues['chats'],
             ),
             Tab(
-              text: "Images",
+              text: AppLocalizations.of(context).localizedValues['images'],
             ),
             Tab(
-              text: "Videos",
+              text: AppLocalizations.of(context).localizedValues['videos'],
             ),
           ],
         ),
