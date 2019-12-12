@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:whatsapp_plugin/constants/colors.dart';
+import 'package:whatsapp_plugin/widgets/video_player_widget.dart';
 
 class VideoPlayerPreview extends StatefulWidget {
   final File _videoFile;
@@ -22,11 +24,10 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
     _initializeVideoPlayerFuture = _videoPlayerController.initialize();
     _videoPlayerController.setLooping(true);
     _chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController,
-        );
-    print("**********************"+ _videoPlayerController.value.aspectRatio.toString());
+      aspectRatio: _videoPlayerController.value.aspectRatio,
+      videoPlayerController: _videoPlayerController,
+    );
     super.initState();
-    
   }
 
   @override
@@ -45,17 +46,21 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 return Center(
-                  child: AspectRatio(
-                    child: Chewie(
-                      controller: _chewieController,
-                    ),
-                    aspectRatio: _videoPlayerController.value.aspectRatio,
-                  ),
+                  child: VideoPlayerWidget(_videoPlayerController),
                 );
               } else {
                 return CircularProgressIndicator();
               }
             }),
+      ),
+      floatingActionButton: Builder(
+        builder: (BuildContext context) {
+          return FloatingActionButton(
+            child: Icon(Icons.save_alt),
+            backgroundColor: PRIMARY_COLOR,
+            onPressed: () {},
+          );
+        },
       ),
     );
   }
