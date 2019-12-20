@@ -45,6 +45,7 @@ class _VideosViewState extends State<VideosView> with WidgetsBindingObserver {
             return GridTile(
               child: GestureDetector(
                 child: Container(
+                  decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent, width: 3.0)),
                   child: videosViewModel.videosList[index].isSelected
                       ? Stack(
                     fit: StackFit.expand,
@@ -65,7 +66,7 @@ class _VideosViewState extends State<VideosView> with WidgetsBindingObserver {
                   )
                       : VideoGridItem(
                       videosViewModel.videosList[index].videoFile),
-                  padding: EdgeInsets.all(2.0),
+                  padding: EdgeInsets.all(5.0),
                 ),
                 onTap: () {
                   if (videosViewModel.selectingMode == true) {
