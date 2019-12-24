@@ -43,6 +43,7 @@ public class MainActivity extends FlutterActivity {
                     case "shareOnWhatsapp":
                         Intent shareOnWhatsappIntent = FlutterMessageHandler.getFlutterMessageHandlerInstance().shareOnWhatsapp((String) methodCall.argument("filePath"),getApplicationContext(), (boolean)methodCall.argument("isImage"));
                         startActivity(Intent.createChooser(shareOnWhatsappIntent,"share"));
+                        break;
                 }
               }
             }
