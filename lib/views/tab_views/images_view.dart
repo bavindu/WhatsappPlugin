@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/view_models/images_model.dart';
+import 'package:whatsapp_plugin/views/image_preview_view.dart';
 
 class ImagesView extends StatefulWidget {
   @override
@@ -80,8 +81,7 @@ class _ImagesViewState extends State<ImagesView> with WidgetsBindingObserver {
                                 if (imageViewModel.selectingMode) {
                                   imageViewModel.tapOnImage(index);
                                 } else {
-                                  Navigator.pushNamed(context, '/imagePreiew',
-                                      arguments: index);
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=> ImagePreview(index, imageViewModel.imgFileList)));
                                 }
                               },
                               onLongPress: () {

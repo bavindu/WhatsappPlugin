@@ -15,6 +15,7 @@ import 'package:whatsapp_plugin/views/permission_error.view.dart';
 import 'view_models/images_model.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   PermissionHandler().requestPermissions([PermissionGroup.storage]);
   new Directory(SAVE_PATH).create();
   setupLocator();

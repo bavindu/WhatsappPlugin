@@ -8,10 +8,6 @@ class Router {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (context) => MainView());
-      case '/imagePreiew':
-        return MaterialPageRoute(builder: (context) => ImagePreview(settings.arguments));
-      case '/videoPreiew':
-        return MaterialPageRoute(builder: (context) => VideoPlayerPreview());
       default:
         return MaterialPageRoute(builder: (context) => Scaffold(
           body: Center(child: Text('No route for ${settings.name}'),),

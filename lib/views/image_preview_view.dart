@@ -2,21 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_plugin/constants/colors.dart';
 import 'package:whatsapp_plugin/localization/app_localization.dart';
-import 'package:whatsapp_plugin/main.dart';
+import 'package:whatsapp_plugin/services/android_bridge.service.dart';
+import 'package:whatsapp_plugin/services/service_locator.dart';
 import 'package:whatsapp_plugin/view_models/images_model.dart';
 
 class ImagePreview extends StatefulWidget {
   final int fileIndex;
-  ImagePreview(this.fileIndex);
+  final List imageList;
+  ImagePreview(this.fileIndex, this.imageList);
   @override
   _ImagePreviewState createState() => _ImagePreviewState();
 }
 
 class _ImagePreviewState extends State<ImagePreview> {
   int fileIndex;
+  List imageFileList;
+  var androidBridge = locator<AndroidBridge>();
   @override
   void initState() {
     fileIndex = widget.fileIndex;
+    imageFileList = widget.imageList;
     super.initState();
   }
 
@@ -31,7 +36,7 @@ class _ImagePreviewState extends State<ImagePreview> {
             child: Container(
               child: Center(
                 child: Image.file(
-                  imagesViewModel.imgFileList[index].imageFile,
+                  imageFileList[index].imageFile,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -43,18 +48,6 @@ class _ImagePreviewState extends State<ImagePreview> {
           itemCount: imagesViewModel.imgFileList.length,
           controller: PageController(initialPage: fileIndex),
         ),
-        floatingActionButton: Builder(
-          builder: (BuildContext context) {
-            return FloatingActionButton(
-              child: Icon(Icons.save_alt),
-              backgroundColor: PRIMARY_COLOR,
-              onPressed: () {
-                imagesViewModel.saveOneImage(fileIndex, context);
-              },
-            );
-          },
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: BottomAppBar(
           color: PRIMARY_COLOR,
           shape: CircularNotchedRectangle(),
@@ -62,29 +55,67 @@ class _ImagePreviewState extends State<ImagePreview> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                MaterialButton(
-                  minWidth: 40,
-                  onPressed: () {},
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(Icons.share, color: Colors.white),
-                      Text(
-                        AppLocalizations.of(context).localizedValues['repost'],
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
+                Builder(
+                  builder: (BuildContext context) {
+                    return MaterialButton(
+                      minWidth: 40,
+                      onPressed: () {
+                        androidBridge.share(imageFileList[fileIndex].imageFile.path, true);
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.share, color: Colors.white),
+                          Text(
+                            AppLocalizations.of(context)
+                                .localizedValues['repost'],
+                            style: TextStyle(color: Colors.white),
+                          )
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                Builder(
+                  builder: (BuildContext context) {
+                    return RaisedButton(
+                      elevation: 10.0,
+                      shape: CircleBorder(side: BorderSide.none),
+                      onPressed: () {
+                        final snackBar =
+                            SnackBar(content: Text('Yay! A SnackBar!'));
+                        Scaffold.of(context).showSnackBar(snackBar);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(2.0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: <Color>[
+                              Colors.tealAccent,
+                              Colors.tealAccent[400],
+                              Colors.tealAccent[700],
+                            ],
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.save_alt,
+                          color: Colors.white,
+                          size: 40.0,
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 Builder(
                   builder: (BuildContext context) {
                     return MaterialButton(
                       minWidth: 40,
                       onPressed: () {
-                        final snackBar =
-                            SnackBar(content: Text('Yay! A SnackBar!'));
-                        Scaffold.of(context).showSnackBar(snackBar);
+                        androidBridge.shareOnWhatsAppImage(imageFileList[fileIndex].imageFile.path, true);
                       },
                       child: Column(
                         mainAxisSize: MainAxisSize.min,

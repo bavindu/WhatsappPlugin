@@ -72,7 +72,7 @@ class _VideosViewState extends State<VideosView> with WidgetsBindingObserver {
                   if (videosViewModel.selectingMode == true) {
                     videosViewModel.tapOnVideo(index);
                   } else {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> VideoPlayerPreview(videosViewModel.videosList[index].videoFile)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> VideoPlayerPreview(index, videosViewModel.videosList)));
                   }
                 },
                 onLongPress: () {
