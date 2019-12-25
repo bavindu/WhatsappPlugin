@@ -7,9 +7,11 @@ public class Message {
     private String text;
     private String groupName;
     private boolean isGroupMessage;
-    private Date date;
+    private String date;
 
-    public Message(String sender, String text,Date date, boolean isGroupMessage, String groupName) {
+
+
+    public Message(String sender, String text, String date, boolean isGroupMessage, String groupName) {
         this.sender = sender;
         this.text = text;
         this.date = date;
@@ -29,7 +31,11 @@ public class Message {
         return groupName;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
+    }
+
+    public boolean isGroupMessage() {
+        return isGroupMessage;
     }
 }

@@ -1,0 +1,17 @@
+package com.example.whatsapp_plugin.database;
+
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.Query;
+
+import java.util.List;
+
+@Dao
+public interface MessageDao {
+
+    @Insert
+    void insert(WPMessage wpMessage);
+
+    @Query("SELECT * FROM wpmessage")
+    List<WPMessage> getAllWPMessage();
+}
