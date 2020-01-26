@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:whatsapp_plugin/constants/colors.dart';
 import 'package:whatsapp_plugin/localization/app_localization.dart';
 import 'package:whatsapp_plugin/services/android_bridge.service.dart';
+import 'package:whatsapp_plugin/services/common_helper.service.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
 import 'package:whatsapp_plugin/view_models/videos_model.dart';
 import 'package:whatsapp_plugin/widgets/video_player_widget.dart';
@@ -25,6 +25,7 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
   int fileIndex;
   File videoFile;
   AndroidBridge androidBridge = locator<AndroidBridge>();
+  CommonHelperService commonHelperService = locator<CommonHelperService>();
 
   @override
   void initState() {
@@ -38,7 +39,7 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
     _videoPlayerController =
         VideoPlayerController.file(File("storage/" + videoFile.path));
     _initializeVideoPlayerFuture = _videoPlayerController.initialize();
-    _videoPlayerController.setLooping(true);
+    _videoPlayerController.setLooping(false);
   }
 
   @override
@@ -101,7 +102,7 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
                         Icon(Icons.share, color: Colors.white),
                         Text(
                           AppLocalizations.of(context)
-                              .localizedValues['repost'],
+                              .localizedValues['share'],
                           style: TextStyle(color: Colors.white),
                         )
                       ],
@@ -115,9 +116,7 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
                     elevation: 10.0,
                     shape: CircleBorder(side: BorderSide.none),
                     onPressed: () {
-                      final snackBar =
-                          SnackBar(content: Text('Yay! A SnackBar!'));
-                      Scaffold.of(context).showSnackBar(snackBar);
+                      commonHelperService.saveFile(widget._videoList[fileIndex].videoFile);
                     },
                     child: Container(
                       padding: EdgeInsets.all(2.0),

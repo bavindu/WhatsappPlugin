@@ -16,6 +16,10 @@ class AndroidBridge {
   void shareOnWhatsAppImage(String filePath, bool isImage) {
     platform.invokeMethod('shareOnWhatsapp', {'filePath': filePath, 'isImage': isImage});
   }
+  
+  void deleterAllMessages() {
+    platform.invokeMethod('deleteAllMsges');
+  }
 
   Future<List> getAllMessages() async{
     List decodedMessages = [];
@@ -25,6 +29,25 @@ class AndroidBridge {
       decodedMessages.add(decodedItem);
     }
     return decodedMessages;
+  }
+
+  void stopListenToMsg() {
+    platform.invokeMethod('stopService');
+  }
+
+  void startListenToMsg() {
+    platform.invokeMethod('startService');
+  }
+
+  void getNotificationAccess() {
+    platform.invokeMethod('getNotificationAccess');
+  }
+
+
+
+  Future checkNotificationAccess() async {
+    bool hasNotificationAccess = await platform.invokeMethod('checkNotificationAccess');
+    return hasNotificationAccess;
   }
 
 

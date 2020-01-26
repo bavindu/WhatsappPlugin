@@ -39,9 +39,6 @@ public class MainActivity extends FlutterActivity {
     messageRepositary = new MessageRepositary(getApplicationContext());
     startService(serviceIntent);
     methodChanel = new MethodChannel(getFlutterView(), CHANNEL);
-    if(!NotificationManagerCompat.getEnabledListenerPackages(getApplicationContext()).contains(getApplicationContext().getPackageName())) {
-        getApplicationContext().startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-    }
     methodChanel.setMethodCallHandler(
             new MethodChannel.MethodCallHandler() {
               @Override
@@ -69,7 +66,21 @@ public class MainActivity extends FlutterActivity {
                         List<WPMessage> messageList = messageRepositary.getAllMessages();
                         result.success(CommonHelper.getCommonHelperInstance().parseList(messageList));
                         break;
-
+                    case "deleteAllMsges":
+                        messageRepositary.deleteAllMsg();
+                        break;
+                    case "getNotificationAccess":
+                        if(!NotificationManagerCompat.getEnabledListenerPackages(getApplicationContext()).contains(getApplicationContext().getPackageName())) {
+                            getApplicationContext().startActivity(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                        }
+                        break;
+                    case "checkNotificationAccess":
+                        if (NotificationManagerCompat.getEnabledListenerPackages(getApplicationContext()).contains(getApplicationContext().getPackageName())) {
+                            result.success(true);
+                        } else {
+                            result.success(false);
+                        }
+                        break;
                 }
               }
             }

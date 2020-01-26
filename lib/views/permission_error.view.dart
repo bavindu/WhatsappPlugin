@@ -9,7 +9,7 @@ class PermissionErrorView extends StatelessWidget {
       home: Scaffold(
         body: Center(
           child: Container(
-            child: Text("Permission Error"),
+            child: CircularProgressIndicator(),
           ),
         ),
       ),

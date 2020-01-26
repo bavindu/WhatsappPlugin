@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:whatsapp_plugin/constants/app-storage.dart';
 import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/models/image.dart';
+import 'package:whatsapp_plugin/services/app_initializer.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
 import 'package:whatsapp_plugin/services/snackbar.service.dart';
 
@@ -14,6 +15,7 @@ class ImagesViewModel with ChangeNotifier {
   List<File> _selectedImageList = List();
   bool _selectingMode = false;
   final _snackBarService = locator<SnackBarService>();
+  AppInitializer appInitializer = locator<AppInitializer>();
 
   set selectingMode(bool value) {
     _selectingMode = value;
@@ -33,20 +35,25 @@ class ImagesViewModel with ChangeNotifier {
     if (_imgFileList.length > 0) {
       _imgFileList.clear();
     }
-    Directory dir = new Directory(WHATSAPP_STATUS_PATH);
-    var fileList = dir.listSync().where((item) => item.path.endsWith('jpg'));
-    if (fileList.length > 0) {
-      for (var i = 0; i < fileList.length; i++) {
-        _imgFileList.add(new StatusImage(fileList.elementAt(i)));
-        if (i == fileList.length - 1) {
-          _imageViewState = ViewState.Idle;
-          notifyListeners();
+    try {
+      Directory dir = new Directory(WHATSAPP_STATUS_PATH);
+      var fileList = dir.listSync().where((item) => item.path.endsWith('jpg'));
+      if (fileList.length > 0) {
+        for (var i = 0; i < fileList.length; i++) {
+          _imgFileList.add(new StatusImage(fileList.elementAt(i)));
+          if (i == fileList.length - 1) {
+            _imageViewState = ViewState.Idle;
+            notifyListeners();
+          }
         }
+      } else {
+        _imageViewState = ViewState.Idle;
+        notifyListeners();
       }
-    } else {
-      _imageViewState = ViewState.Idle;
-      notifyListeners();
+    } on FileSystemException catch (e) {
+      print ('Whatsapp doesnt found');
     }
+
   }
 
   void tapOnImage(int index) {

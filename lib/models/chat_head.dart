@@ -4,13 +4,17 @@ class ChatHead {
   String _groupName;
   DateTime _date;
   bool _isGroupMsg;
+  String _diplayDate;
+  DateTime now = DateTime.now();
+
 
   ChatHead (String sender, String text, String groupName, DateTime date,  bool isGroupMsg) {
     this._sender = sender;
-    this._text = text;
+    this._text = text.replaceAll("\n", " ");
     this._groupName = groupName;
     this._date = date;
     this.isGroupMsg = isGroupMsg;
+    this._setDisplayDate(date);
   }
 
 
@@ -29,7 +33,7 @@ class ChatHead {
   String get text => _text;
 
   set text(String value) {
-    _text = value;
+    _text = value.replaceAll("\n", " ");
   }
 
   String get groupName => _groupName;
@@ -42,5 +46,18 @@ class ChatHead {
 
   set date(DateTime value) {
     _date = value;
+    this._setDisplayDate(value);
+  }
+
+  String get diplayDate => _diplayDate;
+
+  void _setDisplayDate(DateTime date) {
+    if (DateTime(now.year, now.month, now.day) == DateTime(date.year, date.month, date.day)) {
+      this._diplayDate = this.date.hour.toString() + '.' + this.date.minute.toString();
+    } else if (DateTime(now.year, now.month, now.day-1) == DateTime(date.year, date.month, date.day)) {
+      this._diplayDate = 'YesterDay';
+    } else {
+      this._diplayDate = date.year.toString() + '/' + date.month.toString() + '/' + date.day.toString();
+    }
   }
 }

@@ -18,7 +18,7 @@ class _VideoGridItemState extends State<VideoGridItem> {
     _videoPlayerController =
         VideoPlayerController.file(File("storage/" + widget.videoFile.path));
     _initializeVideoPlayerFuture = _videoPlayerController.initialize();
-    _videoPlayerController.setLooping(true);
+    _videoPlayerController.setLooping(false);
     print("**********************"+ _videoPlayerController.value.aspectRatio.toString());
     super.initState();
   }

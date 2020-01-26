@@ -3,6 +3,7 @@ package com.example.whatsapp_plugin.models;
 import java.util.Date;
 
 public class Message {
+    private String id;
     private String sender;
     private String text;
     private String groupName;

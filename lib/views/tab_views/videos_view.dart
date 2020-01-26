@@ -33,60 +33,71 @@ class _VideosViewState extends State<VideosView> with WidgetsBindingObserver {
       builder: (BuildContext context, VideosViewModel videosViewModel,
               Widget child) =>
           Container(
-        child: videosViewModel.videoViewState == ViewState.Busy
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : videosViewModel.videosList.length > 0 ?
-        GridView.builder(
-          itemCount: videosViewModel.videosList.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
-          itemBuilder: (BuildContext context, int index){
-            return GridTile(
-              child: GestureDetector(
-                child: Container(
-                  decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent, width: 3.0)),
-                  child: videosViewModel.videosList[index].isSelected
-                      ? Stack(
-                    fit: StackFit.expand,
-                    children: <Widget>[
-                      Container(
-                        child: Opacity(
-                          opacity: 0.5,
-                          child: VideoGridItem(videosViewModel
-                              .videosList[index].videoFile),
-                        ),
-                      ),
-                      Icon(
-                        Icons.check,
-                        color: Colors.white,
-                        size: 80.0,
-                      )
-                    ],
-                  )
-                      : VideoGridItem(
-                      videosViewModel.videosList[index].videoFile),
-                  padding: EdgeInsets.all(5.0),
-                ),
-                onTap: () {
-                  if (videosViewModel.selectingMode == true) {
-                    videosViewModel.tapOnVideo(index);
-                  } else {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> VideoPlayerPreview(index, videosViewModel.videosList)));
-                  }
-                },
-                onLongPress: () {
-                  videosViewModel.longPressed(index);
-                },
-              ),
-            ); 
-          },
-        )
-            :
-            Center(child: Image.asset('assets/images/no_data.png'),)
-      ),
+              child: videosViewModel.videoViewState == ViewState.Busy
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : videosViewModel.videosList.length > 0
+                      ? GridView.builder(
+                          itemCount: videosViewModel.videosList.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 1),
+                          itemBuilder: (BuildContext context, int index) {
+                            return GridTile(
+                              child: GestureDetector(
+                                child: Card(
+                                  child: Container(
+                                    child: videosViewModel
+                                            .videosList[index].isSelected
+                                        ? Stack(
+                                            fit: StackFit.expand,
+                                            children: <Widget>[
+                                              Container(
+                                                 child: Opacity(
+                                                  opacity: 0.5,
+                                                  child: VideoGridItem(
+                                                      videosViewModel
+                                                          .videosList[index]
+                                                          .videoFile),
+                                                ),
+                                              ),
+                                              Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                                size: 80.0,
+                                              )
+                                            ],
+                                          )
+                                        : VideoGridItem(videosViewModel
+                                            .videosList[index].videoFile),
+                                    padding: EdgeInsets.all(5.0),
+                                  ),
+                                ),
+                                onTap: () {
+                                  if (videosViewModel.selectingMode == true) {
+                                    videosViewModel.tapOnVideo(index);
+                                  } else {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                VideoPlayerPreview(
+                                                    index,
+                                                    videosViewModel
+                                                        .videosList)));
+                                  }
+                                },
+                                onLongPress: () {
+                                  videosViewModel.longPressed(index);
+                                },
+                              ),
+                            );
+                          },
+                        )
+                      : Center(
+                          child: Image.asset('assets/images/no_data.png'),
+                        )),
     );
   }
 }
-
-

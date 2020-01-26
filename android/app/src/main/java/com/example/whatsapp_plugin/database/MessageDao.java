@@ -1,6 +1,7 @@
 package com.example.whatsapp_plugin.database;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -14,4 +15,10 @@ public interface MessageDao {
 
     @Query("SELECT * FROM wpmessage")
     List<WPMessage> getAllWPMessage();
+
+    @Query("SELECT id, sender,text , groupName, date, isGroupMessage FROM wpmessage WHERE id = :id LIMIT 1")
+    WPMessage exist(String id);
+
+    @Query("DELETE FROM wpmessage")
+    void deleteAllMsg();
 }

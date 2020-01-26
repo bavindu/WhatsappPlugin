@@ -31,6 +31,27 @@ public class MessageRepositary {
         return  wpMessageList;
     }
 
+    public boolean checkAlreadyExists(String id) {
+        WPMessage wpMessage = null;
+        try {
+            wpMessage = new CheckAlreadyExists(messageDao).execute(id).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (wpMessage != null) {
+            return  true;
+        } else {
+            return  false;
+        }
+
+    }
+
+    public void deleteAllMsg(){
+        new DeleteAllMsgMessageAsyncTask(messageDao).execute();
+    }
+
 
     private static class InsertMessageAsyncTask extends AsyncTask<WPMessage, Void, Void> {
         private MessageDao messageDao;
@@ -55,6 +76,33 @@ public class MessageRepositary {
         @Override
         protected List<WPMessage> doInBackground(Void... voids) {
             return messageDao.getAllWPMessage();
+        }
+    }
+
+    private static class CheckAlreadyExists extends  AsyncTask<String, Void, WPMessage> {
+        private MessageDao messageDao;
+
+        private CheckAlreadyExists(MessageDao messageDao) {
+            this.messageDao = messageDao;
+        }
+
+        @Override
+        protected WPMessage doInBackground(String... strings) {
+            return  messageDao.exist(strings[0]);
+        }
+    }
+
+    private static class DeleteAllMsgMessageAsyncTask extends AsyncTask<Void, Void, Void> {
+        private MessageDao messageDao;
+
+        private DeleteAllMsgMessageAsyncTask(MessageDao messageDao) {
+            this.messageDao = messageDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            messageDao.deleteAllMsg();
+            return null;
         }
     }
 }

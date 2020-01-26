@@ -51,6 +51,9 @@ class _MainViewState extends State<MainView> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(icon: Icon(Icons.menu,color: Colors.white,), onPressed: () {
+          Navigator.pushNamed(context, '/menu');
+        }),
         actions: <Widget>[
           buildActionButton(context)
         ],

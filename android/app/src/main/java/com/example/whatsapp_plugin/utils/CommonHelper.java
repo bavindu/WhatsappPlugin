@@ -43,7 +43,7 @@ public class CommonHelper {
             sender = sender.substring(conversationTitle.length()+1).trim() ;
             int brackretIndex = conversationTitle.indexOf("(");
             if (brackretIndex != -1) {
-                groupName = conversationTitle.substring(0,brackretIndex);
+                groupName = conversationTitle.substring(0,brackretIndex).trim();
             } else {
                 groupName = conversationTitle;
             }

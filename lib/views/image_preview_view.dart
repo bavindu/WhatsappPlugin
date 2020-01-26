@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:whatsapp_plugin/constants/colors.dart';
 import 'package:whatsapp_plugin/localization/app_localization.dart';
 import 'package:whatsapp_plugin/services/android_bridge.service.dart';
+import 'package:whatsapp_plugin/services/common_helper.service.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
 import 'package:whatsapp_plugin/view_models/images_model.dart';
 
@@ -18,6 +19,7 @@ class _ImagePreviewState extends State<ImagePreview> {
   int fileIndex;
   List imageFileList;
   var androidBridge = locator<AndroidBridge>();
+  var commonHelper = locator<CommonHelperService>();
   @override
   void initState() {
     fileIndex = widget.fileIndex;
@@ -69,7 +71,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                           Icon(Icons.share, color: Colors.white),
                           Text(
                             AppLocalizations.of(context)
-                                .localizedValues['repost'],
+                                .localizedValues['share'],
                             style: TextStyle(color: Colors.white),
                           )
                         ],
@@ -83,9 +85,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                       elevation: 10.0,
                       shape: CircleBorder(side: BorderSide.none),
                       onPressed: () {
-                        final snackBar =
-                            SnackBar(content: Text('Yay! A SnackBar!'));
-                        Scaffold.of(context).showSnackBar(snackBar);
+                        commonHelper.saveFile(imageFileList[fileIndex].imageFile);
                       },
                       child: Container(
                         padding: EdgeInsets.all(2.0),

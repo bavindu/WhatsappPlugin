@@ -37,20 +37,24 @@ class VideosViewModel with ChangeNotifier {
     if (_videosList.length > 0) {
       _videosList.clear();
     }
-    Directory dir = new Directory(WHATSAPP_STATUS_PATH);
-    var fileList = dir.listSync().where((item)=> item.path.endsWith('mp4'));
-    if (fileList.length > 0) {
-      for(var i = 0; i< fileList.length; i++) {
-        print(fileList.elementAt(i).path);
-        _videosList.add(new StatusVideo(fileList.elementAt(i)));
-        if(i == fileList.length-1) {
-          _videoViewState = ViewState.Idle;
-          notifyListeners();
+    try {
+      Directory dir = new Directory(WHATSAPP_STATUS_PATH);
+      var fileList = dir.listSync().where((item)=> item.path.endsWith('mp4'));
+      if (fileList.length > 0) {
+        for(var i = 0; i< fileList.length; i++) {
+          print(fileList.elementAt(i).path);
+          _videosList.add(new StatusVideo(fileList.elementAt(i)));
+          if(i == fileList.length-1) {
+            _videoViewState = ViewState.Idle;
+            notifyListeners();
+          }
         }
+      } else {
+        _videoViewState = ViewState.Idle;
+        notifyListeners();
       }
-    } else {
-      _videoViewState = ViewState.Idle;
-      notifyListeners();
+    } on FileSystemException catch (e) {
+      print('Whatsapp doesnt found');
     }
   }
 

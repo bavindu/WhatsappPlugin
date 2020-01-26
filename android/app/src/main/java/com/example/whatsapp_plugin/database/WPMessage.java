@@ -1,5 +1,6 @@
 package com.example.whatsapp_plugin.database;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -10,15 +11,17 @@ public class WPMessage {
 
 
 
-    @PrimaryKey (autoGenerate = true)
-    private int id;
+    @PrimaryKey
+    @NonNull
+    private String id;
     private String sender;
     private String text;
     private  String groupName;
     private boolean isGroupMessage;
     private String date;
 
-    public WPMessage(String sender, String text, String groupName, boolean isGroupMessage, String date){
+    public WPMessage(String id, String sender, String text, String groupName, boolean isGroupMessage, String date){
+        this.id = id;
         this.sender = sender;
         this.text = text;
         this.groupName = groupName;
@@ -26,11 +29,8 @@ public class WPMessage {
         this.date = date;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
