@@ -6,8 +6,9 @@ import 'package:whatsapp_plugin/services/service_locator.dart';
 
 class ChatHeadContainer extends StatelessWidget {
   final ChatHead chatHead;
+  final Color avatarColor;
   CommonHelperService commonHelperService = locator<CommonHelperService>();
-  ChatHeadContainer(this.chatHead);
+  ChatHeadContainer(this.chatHead, this.avatarColor);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -20,7 +21,7 @@ class ChatHeadContainer extends StatelessWidget {
               Container(
                 padding: EdgeInsets.only(right: 10.0),
                 child: CircleAvatar(
-                  backgroundColor: commonHelperService.getRandomColor(),
+                  backgroundColor: avatarColor,
                   child: Text(
                       chatHead.isGroupMsg
                       ? chatHead.groupName[0]

@@ -31,7 +31,20 @@ class AppInitializer {
     }
   }
 
+  Future<bool> checkStoragePermission() async {
+    PermissionStatus permissionStatus = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+    if (permissionStatus == PermissionStatus.granted) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future requestStoragePermission() async{
     PermissionHandler().requestPermissions([PermissionGroup.storage]);
+  }
+
+  Future requestNotificationAccess() async{
+    androidBridge.getNotificationAccess();
   }
 }

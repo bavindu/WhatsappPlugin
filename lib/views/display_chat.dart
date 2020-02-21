@@ -17,66 +17,65 @@ class _ChatDisplayViewState extends State<ChatDisplayView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/images/chat_background.png'),
-                fit: BoxFit.cover),
-          ),
-          child: Consumer<ChatViewModel>(
-            builder: (BuildContext context, ChatViewModel chatViewModel,
-                    Widget child) =>
-                FutureBuilder(
-                    future: chatViewModel.prepareDisplayChat(
-                        widget.chatArguments.sender,
-                        widget.chatArguments.groupName,
-                        widget.chatArguments.isGroupMsg),
+        body: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/images/chat_background.png'),
+                  fit: BoxFit.cover),
+            ),
+            child: Consumer<ChatViewModel>(
+              builder: (BuildContext context, ChatViewModel chatViewModel,
+                      Widget child) =>
+                  FutureBuilder(
+                      future: chatViewModel.prepareDisplayChat(
+                          widget.chatArguments.sender,
+                          widget.chatArguments.groupName,
+                          widget.chatArguments.isGroupMsg),
                       builder: (BuildContext buildContext,
-                        AsyncSnapshot<void> asyncSnapshot) {
-                      if (asyncSnapshot.connectionState ==
-                          ConnectionState.done) {
-                        chatViewModel.scrollController = scrollController;
-                        return ListView.builder(
-                            itemCount: chatViewModel.displayChat.length,
-                            controller: scrollController,
-                            itemBuilder: (BuildContext cotext, int index) {
-                              return ChatBubbleContainer(
-                                  chatViewModel.displayChat[index]);
-                            });
-                      } else {
-                        return CircularProgressIndicator();
-                      }
-                    }),
-          )),
-      appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            }),
-        title: Text(
-          widget.chatArguments.isGroupMsg
-              ? widget.chatArguments.groupName
-              : widget.chatArguments.sender,
-          style: TextStyle(color: Colors.white),
+                          AsyncSnapshot<void> asyncSnapshot) {
+                        if (asyncSnapshot.connectionState ==
+                            ConnectionState.done) {
+                          chatViewModel.scrollController = scrollController;
+                          return ListView.builder(
+                              itemCount: chatViewModel.displayChat.length,
+                              controller: scrollController,
+                              itemBuilder: (BuildContext cotext, int index) {
+                                return ChatBubbleContainer(
+                                    chatViewModel.displayChat[index]);
+                              });
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      }),
+            )),
+        appBar: AppBar(
+          leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+          title: Text(
+            widget.chatArguments.isGroupMsg
+                ? widget.chatArguments.groupName
+                : widget.chatArguments.sender,
+            style: TextStyle(color: Colors.white),
+          ),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.arrow_downward,
-              color: Colors.white,
-            ),
+        floatingActionButton: Container(
+          height: 40.0,
+          width: 40.0,
+          child: FloatingActionButton(
             onPressed: () {
               scrollController
                   .jumpTo(scrollController.position.maxScrollExtent);
             },
-          )
-        ],
-      ),
-    );
+            child: Icon(Icons.expand_more),
+            backgroundColor: Colors.cyan,
+          ),
+        ));
   }
 }
 

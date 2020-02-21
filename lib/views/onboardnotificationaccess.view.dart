@@ -3,16 +3,18 @@ import 'package:whatsapp_plugin/constants/colors.dart';
 import 'package:whatsapp_plugin/services/android_bridge.service.dart';
 import 'package:whatsapp_plugin/services/app_initializer.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
-import 'package:whatsapp_plugin/views/onboardnotificationaccess.view.dart';
 
-class OnboardView extends StatefulWidget {
+class OnboradNotificationAccessView extends StatefulWidget {
   @override
-  _OnboardViewState createState() => _OnboardViewState();
+  _OnboradNotificationAccessViewState createState() =>
+      _OnboradNotificationAccessViewState();
 }
 
-class _OnboardViewState extends State<OnboardView> {
+class _OnboradNotificationAccessViewState
+    extends State<OnboradNotificationAccessView> {
   AndroidBridge androidBridge = locator<AndroidBridge>();
   AppInitializer appInitializer = locator<AppInitializer>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +37,7 @@ class _OnboardViewState extends State<OnboardView> {
                 Center(
                   child: Image(
                     height: 150.0,
-                    image: AssetImage('assets/images/storage-access.png'),
+                    image: AssetImage('assets/images/notification-access.png'),
                   ),
                 ),
                 SizedBox(
@@ -53,11 +55,11 @@ class _OnboardViewState extends State<OnboardView> {
                 ),
                 Center(
                   child: RaisedButton(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                     onPressed: () {
-                      appInitializer.requestStoragePermission();
+                      appInitializer.requestNotificationAccess();
                     },
-                    child: Text('Allow Access',),
+                    child: Text('Allow Access'),
                   ),
                 ),
                 SizedBox(
@@ -67,17 +69,20 @@ class _OnboardViewState extends State<OnboardView> {
                   margin: EdgeInsets.only(right: 30.0),
                   alignment: Alignment.centerRight,
                   child: FlatButton(
-                    onPressed: ()  {
+                    onPressed: () {
                       appInitializer.checkStoragePermission().then((result) {
                         print(result);
                         if (result == true) {
-                          Navigator.push(context,MaterialPageRoute(builder: (context)=>OnboradNotificationAccessView() ));
+                          print('permited');
                         } else {
                           print('not permited');
                         }
                       });
                     },
-                    child: Text('Next',style: TextStyle(fontSize: 20.0,color: Colors.white),),
+                    child: Text(
+                      'Next',
+                      style: TextStyle(fontSize: 20.0, color: Colors.white),
+                    ),
                   ),
                 )
               ],

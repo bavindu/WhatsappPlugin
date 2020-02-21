@@ -33,6 +33,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -68,7 +69,9 @@ class _MyAppState extends State<MyApp> {
               ),
             );
           } else {
-            return OnboardView();
+            return MaterialApp(
+              home: OnboardView(),
+            );
           }
         } else {
           return PermissionErrorView();
@@ -76,5 +79,5 @@ class _MyAppState extends State<MyApp> {
       },
     );
   }
-
 }
+

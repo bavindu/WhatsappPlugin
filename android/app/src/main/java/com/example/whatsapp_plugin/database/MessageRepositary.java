@@ -2,7 +2,9 @@ package com.example.whatsapp_plugin.database;
 
 import android.app.Application;
 import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -61,7 +63,12 @@ public class MessageRepositary {
         }
         @Override
         protected Void doInBackground(WPMessage... wpMessages) {
-            messageDao.insert(wpMessages[0]);
+            try {
+                messageDao.insert(wpMessages[0]);
+            } catch (SQLiteConstraintException e) {
+                Log.e("SQLiteError","Duplicate Primary Key");
+                e.printStackTrace();
+            }
             return null;
         }
     }

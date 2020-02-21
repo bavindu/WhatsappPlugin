@@ -17,7 +17,7 @@ class ChatBubbleContainer extends StatelessWidget {
           color: Colors.white),
       padding: const EdgeInsets.all(10.0),
       margin: const EdgeInsets.only(
-          left: 10.0, top: 10.0, bottom: 10.0, right: 10.0),
+          left: 10.0, top: 10.0, bottom: 10.0, right: 60.0),
       child: Column(
         children: <Widget>[
           Row(

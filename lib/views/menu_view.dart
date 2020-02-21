@@ -14,6 +14,7 @@ class MenuView extends StatefulWidget {
 
 class _MenuViewState extends State<MenuView> {
   AndroidBridge androidBridge = locator<AndroidBridge>();
+  Color faqColor = PRIMARY_COLOR;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,6 +38,7 @@ class _MenuViewState extends State<MenuView> {
                     height: 50.0,
                   ),
                   InkWell(
+                    hoverColor: Colors.cyan,
                     splashColor: Colors.green,
                     onTap: () {
                       print('on tap');
@@ -57,12 +59,12 @@ class _MenuViewState extends State<MenuView> {
                           }),
                     ),
                   ),
-                  Divider(),
                   InkWell(
                     splashColor: Colors.lime,
                     onTap: () {
                       androidBridge.deleterAllMessages();
-                      Provider.of<ChatViewModel>(context,listen: false).deleteAllMessage();
+                      Provider.of<ChatViewModel>(context, listen: false)
+                          .deleteAllMessage();
                       print('deleye msg');
                     },
                     child: ListTile(
@@ -77,7 +79,28 @@ class _MenuViewState extends State<MenuView> {
                       ),
                     ),
                   ),
-                  Divider(),
+                  InkWell(
+                    focusColor: Colors.lime,
+                    onTap: () {
+                      setState(() {
+                           faqColor = Colors.lime;
+                      });
+                    },
+                    child: Container(
+                      color: faqColor,
+                      child: ListTile(
+                        enabled: true,
+                        leading: const Icon(
+                          Icons.help_outline,
+                          color: Colors.white,
+                        ),
+                        title: Text(
+                          "FAQ",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

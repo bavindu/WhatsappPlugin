@@ -13,10 +13,17 @@ class CommonHelperService {
     Color(0xff0DFBC0),
     Color(0xffF9691D)
   ];
-  static Random random = new Random();
 
-  Color getRandomColor() {
-    return colorList[random.nextInt(colorList.length)];
+
+  Color getAvatarColor(int index) {
+    if (index < colorList.length) {
+      return colorList[index];
+    } else {
+      while (index >= colorList.length) {
+        index = index - colorList.length;
+      }
+    }
+    return colorList[index];
   }
 
   void saveFile(File file) {

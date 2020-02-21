@@ -50,6 +50,8 @@ flutter:
   assets:
     - assets/images/no_data.png
     - assets/images/chat_background.png
+    - assets/images/notification-access.png
+    - assets/images/storage-access.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

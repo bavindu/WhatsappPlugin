@@ -4,6 +4,7 @@ import 'package:whatsapp_plugin/views/display_chat.dart';
 import 'package:whatsapp_plugin/views/image_preview_view.dart';
 import 'package:whatsapp_plugin/views/main_view.dart';
 import 'package:whatsapp_plugin/views/menu_view.dart';
+import 'package:whatsapp_plugin/views/onboardnotificationaccess.view.dart';
 import 'package:whatsapp_plugin/views/video_player_preview.dart';
 
 class Router {
