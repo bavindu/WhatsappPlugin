@@ -16,9 +16,8 @@ class _ImagesViewState extends State<ImagesView> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
-  @override
-  
 
+  @override
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     print("state = $state");
@@ -34,69 +33,80 @@ class _ImagesViewState extends State<ImagesView> with WidgetsBindingObserver {
       builder: (BuildContext context, ImagesViewModel imageViewModel,
               Widget child) =>
           Container(
-        child: imageViewModel.imageViewState == ViewState.Busy
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Container(
-                child: imageViewModel.imgFileList.length > 0
-                    ? GridView.builder(
-                      itemCount: imageViewModel.imgFileList.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                      itemBuilder: (BuildContext context, int index){
-                        return GridTile(
-                            child: GestureDetector(
-                              child: Container(
-                                child:
-                                    imageViewModel.imgFileList[index].isSelected
-                                        ? Stack(
-                                            fit: StackFit.expand,
-                                            children: <Widget>[
-                                              Container(
-                                                child: Opacity(
-                                                  opacity: 0.5,
-                                                  child: Image.file(
-                                                    imageViewModel
-                                                        .imgFileList[index]
-                                                        .imageFile,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                ),
-                                              ),
-                                              Icon(
-                                                Icons.check,
-                                                color: Colors.white,
-                                                size: 80.0,
-                                              )
-                                            ],
-                                          )
-                                        : Image.file(
-                                            imageViewModel
-                                                .imgFileList[index].imageFile,
-                                            fit: BoxFit.cover,
-                                          ),
-                                padding: EdgeInsets.all(2.0),
-                              ),
-                              onTap: () {
-                                if (imageViewModel.selectingMode) {
-                                  imageViewModel.tapOnImage(index);
-                                } else {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context)=> ImagePreview(index, imageViewModel.imgFileList)));
-                                }
-                              },
-                              onLongPress: () {
-                                imageViewModel.longPressed(index);
-                              },
+        child: FutureBuilder(
+          future: imageViewModel.getImages(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data == true) {
+                return Container(
+                  child: imageViewModel.imgFileList.length > 0
+                      ? GridView.builder(
+                    itemCount: imageViewModel.imgFileList.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2),
+                    itemBuilder: (BuildContext context, int index) {
+                      return GridTile(
+                        child: GestureDetector(
+                          child: Container(
+                            child: imageViewModel.imgFileList[index].isSelected
+                                ? Stack(
+                              fit: StackFit.expand,
+                              children: <Widget>[
+                                Container(
+                                  child: Opacity(
+                                    opacity: 0.5,
+                                    child: Image.file(
+                                      imageViewModel
+                                          .imgFileList[index].imageFile,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.check,
+                                  color: Colors.white,
+                                  size: 80.0,
+                                )
+                              ],
+                            )
+                                : Image.file(
+                              imageViewModel.imgFileList[index].imageFile,
+                              fit: BoxFit.cover,
                             ),
-                          );
-                      },
-                    )
-                    : Center(
-                        child: Image.asset('assets/images/no_data.png'),
-                      ),
-              ),
+                            padding: EdgeInsets.all(2.0),
+                          ),
+                          onTap: () {
+                            if (imageViewModel.selectingMode) {
+                              imageViewModel.tapOnImage(index);
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ImagePreview(
+                                          index, imageViewModel.imgFileList)));
+                            }
+                          },
+                          onLongPress: () {
+                            imageViewModel.longPressed(index);
+                          },
+                        ),
+                      );
+                    },
+                  )
+                      : Center(
+                    child: Image.asset('assets/images/no_data.png'),
+                  ),
+                );
+              } else {
+                return CircularProgressIndicator();
+              }
+            }else {
+              return CircularProgressIndicator();
+            }
+        }),
       ),
     );
   }
 }
+
 

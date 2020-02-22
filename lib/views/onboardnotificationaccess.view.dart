@@ -63,7 +63,7 @@ class _OnboradNotificationAccessViewState
                   ),
                 ),
                 SizedBox(
-                  height: 150.0,
+                  height: 100.0,
                 ),
                 Container(
                   margin: EdgeInsets.only(right: 30.0),
@@ -73,7 +73,7 @@ class _OnboradNotificationAccessViewState
                       appInitializer.checkStoragePermission().then((result) {
                         print(result);
                         if (result == true) {
-                          print('permited');
+                          Navigator.pushNamed(context, '/');
                         } else {
                           print('not permited');
                         }

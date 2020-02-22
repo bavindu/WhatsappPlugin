@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:whatsapp_plugin/constants/colors.dart';
 import 'package:whatsapp_plugin/localization/app_localization.dart';
 import 'package:whatsapp_plugin/services/android_bridge.service.dart';
+import 'package:whatsapp_plugin/services/app_initializer.dart';
 import 'package:whatsapp_plugin/services/common_helper.service.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
 import 'package:whatsapp_plugin/view_models/images_model.dart';
@@ -20,6 +21,7 @@ class _ImagePreviewState extends State<ImagePreview> {
   List imageFileList;
   var androidBridge = locator<AndroidBridge>();
   var commonHelper = locator<CommonHelperService>();
+  AppInitializer appInitializer = locator<AppInitializer>();
   @override
   void initState() {
     fileIndex = widget.fileIndex;
@@ -85,7 +87,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                       elevation: 10.0,
                       shape: CircleBorder(side: BorderSide.none),
                       onPressed: () {
-                        commonHelper.saveFile(imageFileList[fileIndex].imageFile);
+                        commonHelper.saveFile(appInitializer.rootPath,imageFileList[fileIndex].imageFile);
                       },
                       child: Container(
                         padding: EdgeInsets.all(2.0),

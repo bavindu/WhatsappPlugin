@@ -61,7 +61,7 @@ class _OnboardViewState extends State<OnboardView> {
                   ),
                 ),
                 SizedBox(
-                  height: 150.0,
+                  height: 100.0,
                 ),
                 Container(
                   margin: EdgeInsets.only(right: 30.0),

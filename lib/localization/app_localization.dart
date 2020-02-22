@@ -16,6 +16,8 @@ class AppLocalizations {
       'videos': 'Videos',
       'share': 'Share',
       'repost': 'Repost',
+      'delete_message': 'Delete Messages',
+      'privacy_policy' : 'Privacy Policy',
 
     },
     'es': {
@@ -25,6 +27,8 @@ class AppLocalizations {
       'videos': 'Vídeos',
       'share': 'Compartir',
       'repost': 'Volver a enviar',
+      'delete_messages' : 'Eliminar mensajes',
+      'privacy_policy' : 'Política de privacidad',
     },
   };
 

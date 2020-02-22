@@ -26,11 +26,7 @@ class ImagesViewModel with ChangeNotifier {
   ViewState get imageViewState => _imageViewState;
   List<StatusImage> get imgFileList => _imgFileList;
 
-  ImagesViewModel() {
-    getImages();
-  }
-
-  void getImages() {
+  Future<bool> getImages() async {
     _imageViewState = ViewState.Busy;
     if (_imgFileList.length > 0) {
       _imgFileList.clear();
@@ -42,16 +38,15 @@ class ImagesViewModel with ChangeNotifier {
         for (var i = 0; i < fileList.length; i++) {
           _imgFileList.add(new StatusImage(fileList.elementAt(i)));
           if (i == fileList.length - 1) {
-            _imageViewState = ViewState.Idle;
-            notifyListeners();
+            return true;
           }
         }
       } else {
-        _imageViewState = ViewState.Idle;
-        notifyListeners();
+        return true;
       }
     } on FileSystemException catch (e) {
       print ('Whatsapp doesnt found');
+      return false;
     }
 
   }
@@ -111,16 +106,17 @@ class ImagesViewModel with ChangeNotifier {
   }
 
   void saveFiles() {
+    String appDir = appInitializer.rootPath+APP_DIR;
     _selectedImageList.forEach((imageFile) {
       String imagePath = imageFile.path;
       String imageName = imagePath.split('/').last;
-      String savePath = SAVE_PATH + imageName;
+      String savePath = appDir + '/' + imageName;
       print(savePath);
       try {
         imageFile.copySync(savePath);
       } catch (error) {
         if (error is FileSystemException) {
-          new Directory(SAVE_PATH).create();
+          new Directory(appDir).create();
           imageFile.copy(savePath);
         }
       }
@@ -138,16 +134,18 @@ class ImagesViewModel with ChangeNotifier {
   }
 
   void saveOneImage(int index, BuildContext context) {
+    String appDir = appInitializer.rootPath+APP_DIR;
+    print(appDir);
     var imageFile = _imgFileList[index].imageFile;
     String imagePath = imageFile.path;
     String imageName = imagePath.split('/').last;
-    String savePath = SAVE_PATH + imageName;
+    String savePath = appDir + '/' + imageName;
     try {
       imageFile.copySync(savePath);
       _snackBarService.showSnakBar(context, "Saved SuccessFully");
     } catch (error) {
       if (error is FileSystemException) {
-        new Directory(SAVE_PATH).create();
+        new Directory(appDir).create();
         imageFile.copy(savePath);
       }
     }

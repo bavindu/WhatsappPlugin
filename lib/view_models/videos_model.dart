@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:whatsapp_plugin/constants/app-storage.dart';
 import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/models/statusVideo.dart';
+import 'package:whatsapp_plugin/services/app_initializer.dart';
+import 'package:whatsapp_plugin/services/service_locator.dart';
 
  
 class VideosViewModel with ChangeNotifier {
@@ -15,13 +17,8 @@ class VideosViewModel with ChangeNotifier {
   bool _selectingMode = false;
   ViewState _videoViewState = ViewState.Idle;
   List<File> get selectedVideoList => _selectedVideoList;
+  AppInitializer appInitializer = locator<AppInitializer>();
 
-
-
-
-  VideosViewModel() {
-    getVideos();
-  }
 
   ViewState get videoViewState => _videoViewState;
   bool get selectingMode => _selectingMode;
@@ -32,7 +29,7 @@ class VideosViewModel with ChangeNotifier {
 
   List<StatusVideo> get videosList => _videosList;
 
-  void getVideos() {
+  Future<bool> getVideos() async {
     _videoViewState = ViewState.Busy;
     if (_videosList.length > 0) {
       _videosList.clear();
@@ -45,16 +42,15 @@ class VideosViewModel with ChangeNotifier {
           print(fileList.elementAt(i).path);
           _videosList.add(new StatusVideo(fileList.elementAt(i)));
           if(i == fileList.length-1) {
-            _videoViewState = ViewState.Idle;
-            notifyListeners();
+            return true;
           }
         }
       } else {
-        _videoViewState = ViewState.Idle;
-        notifyListeners();
+        return true;
       }
     } on FileSystemException catch (e) {
       print('Whatsapp doesnt found');
+      return false;
     }
   }
 
@@ -94,14 +90,15 @@ class VideosViewModel with ChangeNotifier {
   }
 
   void saveFiles() {
+    String appDir = appInitializer.rootPath + APP_DIR;
     _selectedVideoList.forEach((videoFile) {
       String videoName = videoFile.path.split('/').last;
-      String savePath = SAVE_PATH + videoName;
+      String savePath = appDir + '/' +videoName;
       try {
         videoFile.copySync(savePath);
       } catch (error) {
         if ( error is FileSystemException) {
-          new Directory(SAVE_PATH).create();
+          new Directory(appDir).create();
           videoFile.copy(savePath);
         }
       }

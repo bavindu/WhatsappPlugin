@@ -6,6 +6,7 @@ import 'package:video_player/video_player.dart';
 import 'package:whatsapp_plugin/constants/colors.dart';
 import 'package:whatsapp_plugin/localization/app_localization.dart';
 import 'package:whatsapp_plugin/services/android_bridge.service.dart';
+import 'package:whatsapp_plugin/services/app_initializer.dart';
 import 'package:whatsapp_plugin/services/common_helper.service.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
 import 'package:whatsapp_plugin/view_models/videos_model.dart';
@@ -26,6 +27,7 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
   File videoFile;
   AndroidBridge androidBridge = locator<AndroidBridge>();
   CommonHelperService commonHelperService = locator<CommonHelperService>();
+  AppInitializer appInitializer = locator<AppInitializer>();
 
   @override
   void initState() {
@@ -116,7 +118,7 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
                     elevation: 10.0,
                     shape: CircleBorder(side: BorderSide.none),
                     onPressed: () {
-                      commonHelperService.saveFile(widget._videoList[fileIndex].videoFile);
+                      commonHelperService.saveFile(appInitializer.rootPath,widget._videoList[fileIndex].videoFile);
                     },
                     child: Container(
                       padding: EdgeInsets.all(2.0),

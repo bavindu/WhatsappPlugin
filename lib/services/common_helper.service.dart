@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:whatsapp_plugin/constants/app-storage.dart';
+import 'package:whatsapp_plugin/services/app_initializer.dart';
+import 'package:whatsapp_plugin/services/service_locator.dart';
 
 class CommonHelperService {
   static List<Color> colorList = [
@@ -26,15 +28,16 @@ class CommonHelperService {
     return colorList[index];
   }
 
-  void saveFile(File file) {
+  void saveFile(String rootPath, File file) {
+    String appDir = rootPath+APP_DIR;
     String filePath = file.path;
     String fileName = filePath.split('/').last;
-    String savePath = SAVE_PATH + fileName;
+    String savePath = appDir + '/' + fileName;
     try {
       file.copySync(savePath);
     } catch (error) {
       if (error is FileSystemException) {
-        new Directory(SAVE_PATH).create();
+        new Directory(appDir).create();
         file.copy(savePath);
       }
     }

@@ -19,7 +19,6 @@ class _ChatViewState extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    print('rebuilding');
     return Consumer<ChatViewModel>(
       builder:
           (BuildContext context, ChatViewModel chatViewModel, Widget child) =>

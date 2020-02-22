@@ -10,8 +10,7 @@ import com.example.whatsapp_plugin.models.Message;
 import com.example.whatsapp_plugin.utils.CommonHelper;
 import com.google.gson.Gson;
 
-import java.util.Date;
-import java.util.HashMap;
+
 
 public class NotificationManagerService extends NotificationListenerService {
 
@@ -26,7 +25,6 @@ public class NotificationManagerService extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification sbn, RankingMap rankingMap) {
-        // sbn.getTag() is unique. so put it in database and when notification posted check tag is already there. if not do the operations
         String packageName;
         super.onNotificationPosted(sbn, rankingMap);
         packageName = sbn.getPackageName();
@@ -38,8 +36,6 @@ public class NotificationManagerService extends NotificationListenerService {
             Log.i("NotficationActual","id "+sbn.getNotification().extras.get("android.text"));
             boolean isAlreadyExists = messageRepositary.checkAlreadyExists(sbnId);
             if (!isAlreadyExists) {
-                Log.i("NotficationActual","id "+sbnId);
-                Log.i("NotficationActual","id "+sbn.getNotification().extras.get("android.text"));
                 Message message = CommonHelper.getCommonHelperInstance().parseMessage(sbn.getNotification().extras);
                 WPMessage wpMessage = new WPMessage(
                         sbnId,
@@ -57,14 +53,6 @@ public class NotificationManagerService extends NotificationListenerService {
 
             cancelNotification(sbn.getKey());
         }
-//        Log.i("NotficationActual","notification "+sbn.getNotification().extras.get("android.text"));
-//        Log.i("NotficationActual","id "+sbn.getId());
-//        Log.i("NotficationActual","visibility "+sbn.getNotification().visibility);
-//        Log.i("NotficationActual","content "+sbn.getId());
-//        Log.i("NotficationActual","tag "+sbn.getTag());
-//        Log.i("NotficationActual","flag "+sbn.getNotification().flags);
-//        Log.i("NotficationActual","ongoin "+sbn.isOngoing());
-//        Log.i("NotficationActual","***************************** ");
     }
 
 }

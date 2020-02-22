@@ -6,9 +6,11 @@ import 'package:whatsapp_plugin/services/android_bridge.service.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
 
 class AppInitializer {
-  String savePath;
+  String _rootPath;
   bool permissionGranted;
   AndroidBridge androidBridge = locator<AndroidBridge>();
+
+  String get rootPath => _rootPath;
 
   Future initialize () async {
     var appDirectoryList = await getExternalStorageDirectories();
@@ -16,8 +18,8 @@ class AppInitializer {
     print('appPath '+appPath );
     if (appPath.contains('Android')) {
       int index = appPath.indexOf('Android');
-      savePath = appPath.substring(0,index);
-      print ('storage path' + savePath);
+      _rootPath = appPath.substring(0,index);
+      print ('storage path' + _rootPath);
     }
   }
 
