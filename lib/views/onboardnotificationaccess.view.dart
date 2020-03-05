@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_plugin/constants/colors.dart';
+import 'package:whatsapp_plugin/localization/app_localization.dart';
 import 'package:whatsapp_plugin/services/android_bridge.service.dart';
 import 'package:whatsapp_plugin/services/app_initializer.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
@@ -32,26 +33,34 @@ class _OnboradNotificationAccessViewState
           child: Padding(
             padding: EdgeInsets.only(top: 100.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+                Container(
+                  child: Text(
+                    AppLocalizations.of(context)
+                        .localizedValues['notifi_access_req'],
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 25.0,
+                      color: Color(0xFFbd695a),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
                 Center(
                   child: Image(
                     height: 150.0,
                     image: AssetImage('assets/images/notification-access.png'),
                   ),
                 ),
-                SizedBox(
-                  height: 100.0,
-                ),
                 Container(
+                  padding: EdgeInsets.all(10.0),
                   child: Text(
-                    'Whatsapp Plugin need to access your storage',
-                    textAlign: TextAlign.center,
+                      AppLocalizations.of(context)
+                          .localizedValues['notification_permission'],
+                    textAlign: TextAlign.justify,
                     style: TextStyle(fontSize: 20.0, color: Colors.white),
                   ),
-                ),
-                SizedBox(
-                  height: 50.0,
                 ),
                 Center(
                   child: RaisedButton(
@@ -62,15 +71,12 @@ class _OnboradNotificationAccessViewState
                     child: Text('Allow Access'),
                   ),
                 ),
-                SizedBox(
-                  height: 100.0,
-                ),
                 Container(
                   margin: EdgeInsets.only(right: 30.0),
                   alignment: Alignment.centerRight,
                   child: FlatButton(
                     onPressed: () {
-                      appInitializer.checkStoragePermission().then((result) {
+                      appInitializer.checkNotificationAccess().then((result) {
                         print(result);
                         if (result == true) {
                           Navigator.pushNamed(context, '/');

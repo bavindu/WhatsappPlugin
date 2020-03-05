@@ -6,6 +6,20 @@ import 'package:whatsapp_plugin/models/chat_bubble.dart';
 class ChatBubbleContainer extends StatelessWidget {
   final ChatBubble chatBubble;
   ChatBubbleContainer(this.chatBubble);
+
+  String _getDisplayDate(DateTime dateTime) {
+    String displayDate;
+    var minute = dateTime.minute.toString();
+    var hour = dateTime.hour.toString();
+    if (minute.length == 1) {
+      minute = '0' + minute;
+    }
+    if (hour.length == 1) {
+      hour = '0' + hour;
+    }
+    displayDate = hour + '.' + minute;
+    return displayDate;
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,16 +44,7 @@ class ChatBubbleContainer extends StatelessWidget {
                 ),
               ),
               Container(
-                child: chatBubble.date.minute.toString().length == 1
-                    ? Text(chatBubble.date.hour.toString() +
-                    '.' +
-                    '0' +
-                    chatBubble.date.minute.toString())
-                    : Text(
-                  chatBubble.date.hour.toString() +
-                      '.' +
-                      chatBubble.date.minute.toString(),
-                ),
+                child: Text(_getDisplayDate(chatBubble.date)),
               )
             ],
           ),

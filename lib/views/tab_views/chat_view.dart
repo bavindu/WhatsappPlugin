@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:whatsapp_plugin/localization/app_localization.dart';
 import 'package:whatsapp_plugin/router_arguments/chat_arguments.dart';
 import 'package:whatsapp_plugin/services/common_helper.service.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
@@ -59,9 +60,28 @@ class _ChatViewState extends State<ChatView> {
               );
             } else {
               return Container(
-                child: Image.asset('assets/images/no_data.png'),
-                padding: EdgeInsets.all(100.0),
-              );
+                  child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 30.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    FractionallySizedBox(
+                      child: Container(
+                        child: Image.asset('assets/images/no_data.png'),
+                      ),
+                      widthFactor: 0.5,
+                    ),
+                    Text(
+                      AppLocalizations.of(context).localizedValues['no_msg'],
+                      style: TextStyle(fontSize: 20.0),
+                    ),
+                    Flexible(
+                        child: FractionallySizedBox(
+                      heightFactor: 0.1,
+                    ))
+                  ],
+                ),
+              ));
             }
           } else {
             return Center(

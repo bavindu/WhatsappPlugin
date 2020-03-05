@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -6,16 +7,16 @@ import 'package:whatsapp_plugin/constants/app-storage.dart';
 import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/models/image.dart';
 import 'package:whatsapp_plugin/services/app_initializer.dart';
+import 'package:whatsapp_plugin/services/common_helper.service.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
-import 'package:whatsapp_plugin/services/snackbar.service.dart';
 
 class ImagesViewModel with ChangeNotifier {
   List<StatusImage> _imgFileList = List();
   ViewState _imageViewState = ViewState.Idle;
   List<File> _selectedImageList = List();
   bool _selectingMode = false;
-  final _snackBarService = locator<SnackBarService>();
   AppInitializer appInitializer = locator<AppInitializer>();
+  CommonHelperService commonHelperService = locator<CommonHelperService>();
 
   set selectingMode(bool value) {
     _selectingMode = value;
@@ -27,26 +28,29 @@ class ImagesViewModel with ChangeNotifier {
   List<StatusImage> get imgFileList => _imgFileList;
 
   Future<bool> getImages() async {
-    _imageViewState = ViewState.Busy;
-    if (_imgFileList.length > 0) {
-      _imgFileList.clear();
-    }
-    try {
-      Directory dir = new Directory(WHATSAPP_STATUS_PATH);
-      var fileList = dir.listSync().where((item) => item.path.endsWith('jpg'));
-      if (fileList.length > 0) {
-        for (var i = 0; i < fileList.length; i++) {
-          _imgFileList.add(new StatusImage(fileList.elementAt(i)));
-          if (i == fileList.length - 1) {
-            return true;
-          }
-        }
-      } else {
-        return true;
+    if (selectingMode == true) {
+      return true;
+    } else {
+      if (_imgFileList.length > 0) {
+        _imgFileList.clear();
       }
-    } on FileSystemException catch (e) {
-      print ('Whatsapp doesnt found');
-      return false;
+      try {
+        Directory dir = new Directory(appInitializer.wpStatusPath);
+        var fileList = dir.listSync().where((item) => item.path.endsWith('jpg'));
+        if (fileList.length > 0) {
+          for (var i = 0; i < fileList.length; i++) {
+            _imgFileList.add(new StatusImage(fileList.elementAt(i)));
+            if (i == fileList.length - 1) {
+              return true;
+            }
+          }
+        } else {
+          return true;
+        }
+      } on FileSystemException catch (e) {
+        print ('Whatsapp doesnt found');
+        return false;
+      }
     }
 
   }
@@ -105,8 +109,9 @@ class ImagesViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void saveFiles() {
-    String appDir = appInitializer.rootPath+APP_DIR;
+  void saveFiles(BuildContext context) {
+    var rootPath = appInitializer.rootPath;
+    String appDir = rootPath + APP_DIR;
     _selectedImageList.forEach((imageFile) {
       String imagePath = imageFile.path;
       String imageName = imagePath.split('/').last;
@@ -114,6 +119,7 @@ class ImagesViewModel with ChangeNotifier {
       print(savePath);
       try {
         imageFile.copySync(savePath);
+        commonHelperService.showSnakBar(context, 'Saved Successfully');
       } catch (error) {
         if (error is FileSystemException) {
           new Directory(appDir).create();
@@ -142,7 +148,6 @@ class ImagesViewModel with ChangeNotifier {
     String savePath = appDir + '/' + imageName;
     try {
       imageFile.copySync(savePath);
-      _snackBarService.showSnakBar(context, "Saved SuccessFully");
     } catch (error) {
       if (error is FileSystemException) {
         new Directory(appDir).create();

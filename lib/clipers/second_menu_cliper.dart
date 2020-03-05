@@ -14,7 +14,7 @@ class SecondMenuCliper extends CustomClipper<Path> {
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) {
     // TODO: implement shouldReclip
-    return null;
+    return true;
   }
 
 }

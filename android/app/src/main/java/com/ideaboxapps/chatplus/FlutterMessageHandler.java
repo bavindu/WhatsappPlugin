@@ -1,6 +1,5 @@
-package com.example.whatsapp_plugin;
+package com.ideaboxapps.chatplus;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,11 +7,6 @@ import android.net.Uri;
 import androidx.core.content.FileProvider;
 
 import java.io.File;
-
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 public class FlutterMessageHandler {
     private static FlutterMessageHandler flutterMessageHandlerInstance;
@@ -28,7 +22,7 @@ public class FlutterMessageHandler {
 
     public Intent share(String filePath, Context context, boolean isImage) {
         File file = new File(filePath);
-        Uri contentUri = FileProvider.getUriForFile(context, "com.example.whatsappPlugin.fileprovider", file);
+        Uri contentUri = FileProvider.getUriForFile(context, "com.ideaboxapps.whatsappPlugin.fileprovider", file);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         if (isImage) {
             shareIntent.setType("image/jpg");
@@ -41,7 +35,7 @@ public class FlutterMessageHandler {
 
     public Intent shareOnWhatsapp(String filePath, Context context, boolean isImage) {
         File file = new File(filePath);
-        Uri contentUri = FileProvider.getUriForFile(context, "com.example.whatsappPlugin.fileprovider", file);
+        Uri contentUri = FileProvider.getUriForFile(context, "com.ideaboxapps.whatsappPlugin.fileprovider", file);
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         if (isImage) {
             shareIntent.setType("image/jpg");

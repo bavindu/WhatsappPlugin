@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:whatsapp_plugin/constants/app-storage.dart';
 import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/models/chat_bubble.dart';
 import 'package:whatsapp_plugin/models/chat_head.dart';
@@ -45,21 +46,25 @@ class ChatViewModel with ChangeNotifier {
     switch (methodCall.method) {
       case "getMessage":
         String stringMessage = methodCall.arguments.toString();
-        Map<String,dynamic> decodedMessage = await jsonDecode(stringMessage);
+        Map<String, dynamic> decodedMessage = await jsonDecode(stringMessage);
+        DateTime decodeMsgDate = DateTime.fromMillisecondsSinceEpoch(
+            int.parse(decodedMessage['id']));
         if (chatHeadList.isNotEmpty) {
           int removeIndex;
-          for(var i = 0; i < chatHeadList.length; i++) {
+          for (var i = 0; i < chatHeadList.length; i++) {
             if (decodedMessage['isGroupMessage'] == true) {
               if (chatHeadList[i].groupName == decodedMessage['groupName']) {
                 chatHeadList[i].text = decodedMessage['text'];
-                chatHeadList[i].date = DateTime.parse(decodedMessage['date']);
+                chatHeadList[i].sender = decodedMessage['sender'];
+                chatHeadList[i].date = decodeMsgDate;
                 removeIndex = i;
                 break;
               }
             } else {
-              if(chatHeadList[i].isGroupMsg == false && (chatHeadList[i].sender == decodedMessage['sender'])) {
+              if (chatHeadList[i].isGroupMsg == false &&
+                  (chatHeadList[i].sender == decodedMessage['sender'])) {
                 chatHeadList[i].text = decodedMessage['text'];
-                chatHeadList[i].date = DateTime.parse(decodedMessage['date']);
+                chatHeadList[i].date = decodeMsgDate;
                 removeIndex = i;
                 break;
               }
@@ -67,29 +72,31 @@ class ChatViewModel with ChangeNotifier {
           }
           if (removeIndex != null) {
             ChatHead chatHead = chatHeadList.removeAt(removeIndex);
-            chatHeadList.insert(0, chatHead );
+            chatHeadList.insert(0, chatHead);
           } else {
-            chatHeadList.insert(0, new ChatHead(
-                decodedMessage['sender'],
-                decodedMessage['text'],
-                decodedMessage['groupName'], DateTime.parse(decodedMessage['date']),
-                decodedMessage['isGroupMessage']));
+            chatHeadList.insert(
+                0,
+                new ChatHead(
+                    decodedMessage['sender'],
+                    decodedMessage['text'],
+                    decodedMessage['groupName'],
+                    decodeMsgDate,
+                    decodedMessage['isGroupMessage']));
           }
         } else {
-          chatHeadList.add(new ChatHead(decodedMessage['sender'],
+          chatHeadList.add(new ChatHead(
+              decodedMessage['sender'],
               decodedMessage['text'],
-              decodedMessage['groupName'], DateTime.parse(decodedMessage['date']),
+              decodedMessage['groupName'],
+              decodeMsgDate,
               decodedMessage['isGroupMessage']));
         }
         if (displayChat.isNotEmpty) {
-          displayChat.add(
-              new ChatBubble(
-                  decodedMessage['text'],
-                  decodedMessage['sender'],
-                  DateTime.parse(decodedMessage['date']),
-                  decodedMessage['isGroupMessage']
-              )
-          );
+          displayChat.add(new ChatBubble(
+              decodedMessage['text'],
+              decodedMessage['sender'],
+              decodeMsgDate,
+              decodedMessage['isGroupMessage']));
           scrollController.jumpTo(scrollController.position.maxScrollExtent);
         }
         messageList.add(decodedMessage);
@@ -100,22 +107,20 @@ class ChatViewModel with ChangeNotifier {
   void _prepareForChatHeads() {
     for (var i = 0; i < messageList.length; i++) {
       var item = messageList[i];
+      DateTime itemDate =
+          DateTime.fromMillisecondsSinceEpoch(int.parse(item['id']));
       if (chatHeadList.isEmpty) {
-        chatHeadList.add(new ChatHead(
-            item['sender'],
-            item['text'],
-            item['groupName'],
-            DateTime.parse(item['date']),
-            item['isGroupMessage']));
+        chatHeadList.add(new ChatHead(item['sender'], item['text'],
+            item['groupName'], itemDate, item['isGroupMessage']));
       } else {
         var loopBroke = false;
         for (var j = 0; j < chatHeadList.length; j++) {
           if (item['isGroupMessage'] == true) {
             if (chatHeadList[j].groupName == item['groupName'] &&
-                chatHeadList[j].date.isBefore(DateTime.parse(item['date']))) {
+                chatHeadList[j].date.isBefore(itemDate)) {
               chatHeadList[j].sender = item['sender'];
               chatHeadList[j].text = item['text'];
-              chatHeadList[j].date = DateTime.parse(item['date']);
+              chatHeadList[j].date = itemDate;
               loopBroke = true;
               break;
             } else if (chatHeadList[j].groupName == item['groupName']) {
@@ -125,9 +130,9 @@ class ChatViewModel with ChangeNotifier {
           } else if (!chatHeadList[j].isGroupMsg &&
               item['isGroupMessage'] == false) {
             if (chatHeadList[j].sender == item['sender'] &&
-                chatHeadList[j].date.isBefore(DateTime.parse(item['date']))) {
+                chatHeadList[j].date.isBefore(itemDate)) {
               chatHeadList[j].text = item['text'];
-              chatHeadList[j].date = DateTime.parse(item['date']);
+              chatHeadList[j].date = itemDate;
               loopBroke = true;
               break;
             } else if (chatHeadList[j].sender == item['sender']) {
@@ -137,16 +142,12 @@ class ChatViewModel with ChangeNotifier {
           }
         }
         if (loopBroke == false) {
-          chatHeadList.add(new ChatHead(
-              item['sender'],
-              item['text'],
-              item['groupName'],
-              DateTime.parse(item['date']),
-              item['isGroupMessage']));
+          chatHeadList.add(new ChatHead(item['sender'], item['text'],
+              item['groupName'], itemDate, item['isGroupMessage']));
         }
       }
     }
-    chatHeadList.sort((ChatHead chatHead1, ChatHead chatHead2){
+    chatHeadList.sort((ChatHead chatHead1, ChatHead chatHead2) {
       if (chatHead1.date.isAfter(chatHead2.date)) {
         return -1;
       } else if (chatHead1.date.isBefore(chatHead2.date)) {
@@ -158,7 +159,7 @@ class ChatViewModel with ChangeNotifier {
   }
 
   Future<void> prepareDisplayChat(
-       String sender, String groupName, bool isGroupMsg) async {
+      String sender, String groupName, bool isGroupMsg) async {
     displayChat.clear();
     for (var i = 0; i < messageList.length; i++) {
       int addingIndex;
@@ -173,13 +174,15 @@ class ChatViewModel with ChangeNotifier {
         }
       }
       if (addingIndex != null) {
-        DateTime time = DateTime.parse(messageList[i]['date']);
+        DateTime time = DateTime.fromMillisecondsSinceEpoch(
+            int.parse(messageList[i]['id']));
         ChatBubble chatBubble = new ChatBubble(messageList[i]['text'],
             messageList[i]['sender'], time, messageList[i]['isGroupMessage']);
         displayChat.add(chatBubble);
+        print(chatBubble.date.toString());
       }
     }
-     displayChat.sort((ChatBubble chatBubble1, ChatBubble chatBubble2) {
+    displayChat.sort((ChatBubble chatBubble1, ChatBubble chatBubble2) {
       if (chatBubble1.date.isAfter(chatBubble2.date)) {
         return 1;
       } else if (chatBubble1.date.isBefore(chatBubble2.date)) {

@@ -1,26 +1,19 @@
-package com.example.whatsapp_plugin;
+package com.ideaboxapps.chatplus;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.os.Bundle;
-import android.provider.MediaStore;
 
 
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.example.whatsapp_plugin.database.MessageRepositary;
-import com.example.whatsapp_plugin.database.WPMessage;
-import com.example.whatsapp_plugin.utils.CommonHelper;
+import com.ideaboxapps.chatplus.database.MessageRepositary;
+import com.ideaboxapps.chatplus.database.WPMessage;
+import com.ideaboxapps.chatplus.utils.CommonHelper;
+import com.ideaboxapps.chatplus.utils.StatusGenerateListener;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import io.flutter.app.FlutterActivity;
-import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
@@ -68,6 +61,28 @@ public class MainActivity extends FlutterActivity {
                         break;
                     case "deleteAllMsges":
                         messageRepositary.deleteAllMsg();
+                        break;
+                    case "setupStatusGenListener":
+//                        statusGenerateListener = new StatusGenerateListener(methodCall.argument("filePath"), methodCall.argument("appPath"));
+//                        statusGenerateListener.startWatching();
+                        Intent statusServiceIntent = new Intent(MainActivity.this, StatusAutoSaveService.class);
+                        String statusPath = methodCall.argument("filePath");
+                        String appPath = methodCall.argument("appPath");
+                        statusServiceIntent.putExtra("statusPath", statusPath);
+                        statusServiceIntent.putExtra("appPath", appPath);
+                        startService(statusServiceIntent);
+                        break;
+                    case "stopListenToStatusGen":
+                        // statusGenerateListener.stopWatching();
+                        break;
+                    case "startListenToStatusGen":
+                        // statusGenerateListener.startWatching();
+//                        Intent statusServiceIntent = new Intent(MainActivity.this, StatusGenerateListener.class);
+//                        String statusPath = methodCall.argument("filePath");
+//                        String appPath = methodCall.argument("appPath");
+//                        statusServiceIntent.putExtra("statusPath", statusPath);
+//                        statusServiceIntent.putExtra("appPath", appPath);
+//                        startService(statusServiceIntent);
                         break;
                     case "getNotificationAccess":
                         if(!NotificationManagerCompat.getEnabledListenerPackages(getApplicationContext()).contains(getApplicationContext().getPackageName())) {

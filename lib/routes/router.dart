@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:whatsapp_plugin/animations/slide_transition.dart';
 import 'package:whatsapp_plugin/views/display_chat.dart';
+import 'package:whatsapp_plugin/views/faq.view.dart';
 import 'package:whatsapp_plugin/views/image_preview_view.dart';
 import 'package:whatsapp_plugin/views/mainOnboard.dart';
 import 'package:whatsapp_plugin/views/main_view.dart';
@@ -21,6 +22,9 @@ class Router {
         break;
       case '/menu':
         return SlidePageTransitions(page: MenuView());
+        break;
+      case '/faq':
+        return SlidePageTransitions(page: FAQView());
         break;
       default:
         return MaterialPageRoute(

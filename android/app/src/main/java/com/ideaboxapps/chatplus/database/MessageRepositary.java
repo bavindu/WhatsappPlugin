@@ -1,6 +1,5 @@
-package com.example.whatsapp_plugin.database;
+package com.ideaboxapps.chatplus.database;
 
-import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;

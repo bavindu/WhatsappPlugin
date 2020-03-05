@@ -47,6 +47,8 @@ class _VideosViewState extends State<VideosView> with WidgetsBindingObserver {
                         return GridTile(
                           child: GestureDetector(
                             child: Card(
+                              color: Colors.white70,
+                              elevation: 3.0,
                               child: Container(
                                 child:
                                     videosViewModel.videosList[index].isSelected
@@ -93,9 +95,29 @@ class _VideosViewState extends State<VideosView> with WidgetsBindingObserver {
                         );
                       },
                     )
-                  : Center(
-                      child: Image.asset('assets/images/no_data.png'),
-                    ),
+                  : Container(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 30.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      FractionallySizedBox(
+                        child: Container(
+                          child: Image.asset('assets/images/no_data.png'),
+                        ),
+                        widthFactor: 0.5,
+                      ),
+                      Text(
+                        'No Status Found',
+                        style: TextStyle(fontSize: 20.0),
+                      ),
+                      Flexible(
+                          child: FractionallySizedBox(
+                            heightFactor: 0.1,
+                          ))
+                    ],
+                  ),
+                ),)
             );
           } else {
             return Center(
@@ -112,69 +134,3 @@ class _VideosViewState extends State<VideosView> with WidgetsBindingObserver {
   }
 }
 
-//Container(
-//child: videosViewModel.videoViewState == ViewState.Busy
-//? Center(
-//child: CircularProgressIndicator(),
-//)
-//: videosViewModel.videosList.length > 0
-//? GridView.builder(
-//itemCount: videosViewModel.videosList.length,
-//gridDelegate:
-//SliverGridDelegateWithFixedCrossAxisCount(
-//crossAxisCount: 1),
-//itemBuilder: (BuildContext context, int index) {
-//return GridTile(
-//child: GestureDetector(
-//child: Card(
-//child: Container(
-//child: videosViewModel
-//    .videosList[index].isSelected
-//? Stack(
-//fit: StackFit.expand,
-//children: <Widget>[
-//Container(
-//child: Opacity(
-//opacity: 0.5,
-//child: VideoGridItem(
-//videosViewModel
-//    .videosList[index]
-//    .videoFile),
-//),
-//),
-//Icon(
-//Icons.check,
-//color: Colors.white,
-//size: 80.0,
-//)
-//],
-//)
-//    : VideoGridItem(videosViewModel
-//    .videosList[index].videoFile),
-//padding: EdgeInsets.all(5.0),
-//),
-//),
-//onTap: () {
-//if (videosViewModel.selectingMode == true) {
-//videosViewModel.tapOnVideo(index);
-//} else {
-//Navigator.push(
-//context,
-//MaterialPageRoute(
-//builder: (context) =>
-//VideoPlayerPreview(
-//index,
-//videosViewModel
-//    .videosList)));
-//}
-//},
-//onLongPress: () {
-//videosViewModel.longPressed(index);
-//},
-//),
-//);
-//},
-//)
-//: Center(
-//child: Image.asset('assets/images/no_data.png'),
-//)),

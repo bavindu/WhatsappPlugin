@@ -41,7 +41,7 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
     _videoPlayerController =
         VideoPlayerController.file(File("storage/" + videoFile.path));
     _initializeVideoPlayerFuture = _videoPlayerController.initialize();
-    _videoPlayerController.setLooping(false);
+    _videoPlayerController.setLooping(true);
   }
 
   @override
@@ -118,7 +118,7 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
                     elevation: 10.0,
                     shape: CircleBorder(side: BorderSide.none),
                     onPressed: () {
-                      commonHelperService.saveFile(appInitializer.rootPath,widget._videoList[fileIndex].videoFile);
+                      commonHelperService.saveFile(appInitializer.rootPath,widget._videoList[fileIndex].videoFile, context);
                     },
                     child: Container(
                       padding: EdgeInsets.all(2.0),

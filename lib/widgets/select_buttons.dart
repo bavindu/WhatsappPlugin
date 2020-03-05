@@ -29,9 +29,9 @@ class SelectButton extends StatelessWidget {
           icon: Icon(Icons.save),
           onPressed: () {
             if (_selectingMode == SelectingMode.ImageMode) {
-              Provider.of<ImagesViewModel>(context, listen: false).saveFiles();
+              Provider.of<ImagesViewModel>(context, listen: false).saveFiles(context);
             } else {
-              Provider.of<VideosViewModel>(context, listen: false).saveFiles();
+              Provider.of<VideosViewModel>(context, listen: false).saveFiles(context);
             }
           },
           tooltip: "Save",

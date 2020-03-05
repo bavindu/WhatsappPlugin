@@ -18,7 +18,6 @@ class _ImagesViewState extends State<ImagesView> with WidgetsBindingObserver {
   }
 
   @override
-  @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     print("state = $state");
     super.didChangeAppLifecycleState(state);
@@ -93,15 +92,35 @@ class _ImagesViewState extends State<ImagesView> with WidgetsBindingObserver {
                       );
                     },
                   )
-                      : Center(
-                    child: Image.asset('assets/images/no_data.png'),
-                  ),
+                      : Container(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 30.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            FractionallySizedBox(
+                              child: Container(
+                                child: Image.asset('assets/images/no_data.png'),
+                              ),
+                              widthFactor: 0.5,
+                            ),
+                            Text(
+                              'No Status Found',
+                              style: TextStyle(fontSize: 20.0),
+                            ),
+                            Flexible(
+                                child: FractionallySizedBox(
+                                  heightFactor: 0.1,
+                                ))
+                          ],
+                        ),
+                      ),),
                 );
               } else {
-                return CircularProgressIndicator();
+                return Center(child :CircularProgressIndicator());
               }
             }else {
-              return CircularProgressIndicator();
+              return Center(child :CircularProgressIndicator());
             }
         }),
       ),

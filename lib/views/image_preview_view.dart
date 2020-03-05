@@ -87,7 +87,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                       elevation: 10.0,
                       shape: CircleBorder(side: BorderSide.none),
                       onPressed: () {
-                        commonHelper.saveFile(appInitializer.rootPath,imageFileList[fileIndex].imageFile);
+                        commonHelper.saveFile(appInitializer.rootPath,imageFileList[fileIndex].imageFile, context);
                       },
                       child: Container(
                         padding: EdgeInsets.all(2.0),

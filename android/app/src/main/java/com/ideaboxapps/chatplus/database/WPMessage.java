@@ -1,10 +1,8 @@
-package com.example.whatsapp_plugin.database;
+package com.ideaboxapps.chatplus.database;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
-import java.util.Date;
 
 @Entity
 public class WPMessage {
@@ -18,15 +16,13 @@ public class WPMessage {
     private String text;
     private  String groupName;
     private boolean isGroupMessage;
-    private String date;
 
-    public WPMessage(String id, String sender, String text, String groupName, boolean isGroupMessage, String date){
+    public WPMessage(String id, String sender, String text, String groupName, boolean isGroupMessage){
         this.id = id;
         this.sender = sender;
         this.text = text;
         this.groupName = groupName;
         this.isGroupMessage = isGroupMessage;
-        this.date = date;
     }
 
 
@@ -44,11 +40,6 @@ public class WPMessage {
 
     public String getGroupName() {
         return groupName;
-    }
-
-
-    public String getDate() {
-        return date;
     }
 
     public boolean getIsGroupMessage() {

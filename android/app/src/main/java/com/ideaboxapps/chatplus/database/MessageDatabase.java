@@ -1,4 +1,4 @@
-package com.example.whatsapp_plugin.database;
+package com.ideaboxapps.chatplus.database;
 
 import android.content.Context;
 

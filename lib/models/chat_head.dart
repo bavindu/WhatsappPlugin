@@ -1,3 +1,6 @@
+import 'package:whatsapp_plugin/services/common_helper.service.dart';
+import 'package:whatsapp_plugin/services/service_locator.dart';
+
 class ChatHead {
   String _sender;
   String _text;
@@ -6,6 +9,7 @@ class ChatHead {
   bool _isGroupMsg;
   String _diplayDate;
   DateTime now = DateTime.now();
+  CommonHelperService commonHelperService = locator<CommonHelperService>();
 
 
   ChatHead (String sender, String text, String groupName, DateTime date,  bool isGroupMsg) {
@@ -14,7 +18,7 @@ class ChatHead {
     this._groupName = groupName;
     this._date = date;
     this.isGroupMsg = isGroupMsg;
-    this._setDisplayDate(date);
+    this._diplayDate = commonHelperService.setDisplayDate(date);
   }
 
 
@@ -46,18 +50,9 @@ class ChatHead {
 
   set date(DateTime value) {
     _date = value;
-    this._setDisplayDate(value);
+    this._diplayDate = commonHelperService.setDisplayDate(value);
   }
 
   String get diplayDate => _diplayDate;
 
-  void _setDisplayDate(DateTime date) {
-    if (DateTime(now.year, now.month, now.day) == DateTime(date.year, date.month, date.day)) {
-      this._diplayDate = this.date.hour.toString() + '.' + this.date.minute.toString();
-    } else if (DateTime(now.year, now.month, now.day-1) == DateTime(date.year, date.month, date.day)) {
-      this._diplayDate = 'YesterDay';
-    } else {
-      this._diplayDate = date.year.toString() + '/' + date.month.toString() + '/' + date.day.toString();
-    }
-  }
 }

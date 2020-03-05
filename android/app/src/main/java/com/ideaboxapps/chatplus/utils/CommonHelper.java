@@ -1,9 +1,9 @@
-package com.example.whatsapp_plugin.utils;
+package com.ideaboxapps.chatplus.utils;
 
 import android.os.Bundle;
 
-import com.example.whatsapp_plugin.database.WPMessage;
-import com.example.whatsapp_plugin.models.Message;
+import com.ideaboxapps.chatplus.database.WPMessage;
+import com.ideaboxapps.chatplus.models.Message;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
@@ -18,7 +18,7 @@ public class CommonHelper {
     private SimpleDateFormat simpleDateFormat;
 
     private CommonHelper () {
-        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
         gson = new Gson();
     }
 
@@ -50,9 +50,7 @@ public class CommonHelper {
         } else {
             groupName = "NA";
         }
-        Date date = new Date();
-        String formatedDate = simpleDateFormat.format(date);
-        message = new Message(sender, text, formatedDate, isGroupMessage, groupName);
+        message = new Message(sender, text, isGroupMessage, groupName);
         return message;
     }
 

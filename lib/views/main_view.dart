@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_plugin/constants/selecting_mode.dart';
 import 'package:whatsapp_plugin/localization/app_localization.dart';
+import 'package:whatsapp_plugin/services/app_initializer.dart';
+import 'package:whatsapp_plugin/services/service_locator.dart';
 import 'package:whatsapp_plugin/view_models/images_model.dart';
 import 'package:whatsapp_plugin/view_models/videos_model.dart';
+import 'package:whatsapp_plugin/views/menu_view.dart';
 import 'package:whatsapp_plugin/views/tab_views/chat_view.dart';
 import 'package:whatsapp_plugin/views/tab_views/images_view.dart';
 import 'package:whatsapp_plugin/views/tab_views/videos_view.dart';
@@ -17,12 +20,14 @@ class MainView extends StatefulWidget {
 class _MainViewState extends State<MainView> with SingleTickerProviderStateMixin{
 
   TabController _tabController;
+  AppInitializer appInitializer = locator<AppInitializer>();
 
   @override
   void initState() {
-    super.initState();
     _tabController = TabController(vsync: this, length: 3);
     _tabController.addListener(handleTabChange);
+    appInitializer.initialize();
+    super.initState();
   }
 
   Widget buildActionButton(context) {
@@ -51,12 +56,11 @@ class _MainViewState extends State<MainView> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.menu,color: Colors.white,), onPressed: () {
-          Navigator.pushNamed(context, '/menu');
-        }),
+        iconTheme: IconThemeData(color: Colors.white),
         actions: <Widget>[
           buildActionButton(context)
         ],
+        title: Text('Chat Plus',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
         bottom: TabBar(
           labelColor: Colors.white,
           indicatorColor: Colors.white,
@@ -81,6 +85,9 @@ class _MainViewState extends State<MainView> with SingleTickerProviderStateMixin
           ImagesView(),
           VideosView(),
         ],
+      ),
+      drawer: Drawer(
+        child: MenuView(),
       ),
     );
   }

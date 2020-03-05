@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:whatsapp_plugin/view_models/chat_model.dart';
+
 
 class AndroidBridge {
   static const platform = const MethodChannel('androidBridge');
@@ -41,6 +39,18 @@ class AndroidBridge {
 
   void getNotificationAccess() {
     platform.invokeMethod('getNotificationAccess');
+  }
+
+  void setupStatusGenListener(String filePath, String appPath) {
+    platform.invokeMethod('setupStatusGenListener', {'filePath': filePath, 'appPath': appPath});
+  }
+
+  void stopListenToStatusGen() {
+    platform.invokeMethod('stopListenToStatusGen');
+  }
+
+  void startListenToStatusGen() {
+    platform.invokeMethod('startListenToStatusGen');
   }
 
 

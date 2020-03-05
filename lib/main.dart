@@ -1,3 +1,4 @@
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +10,12 @@ import 'package:whatsapp_plugin/services/service_locator.dart';
 import 'package:whatsapp_plugin/view_models/chat_model.dart';
 import 'package:whatsapp_plugin/view_models/images_model.dart';
 import 'package:whatsapp_plugin/view_models/videos_model.dart';
+
+String appId = "ca-app-pub-4106830528171807~2327868990";
+
+
+
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,11 +29,85 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  static final MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+    keywords: <String>['whatsapp', 'beautiful apps','social'],
+    childDirected: false,
+    testDevices: <String>[], // Android emulators are considered test devices
+  );
+
+  BannerAd _bannerAd;
+  InterstitialAd _interstitialAd;
   AppInitializer appInitializer = locator<AppInitializer>();
+  double _padding = 0.0;
+
+  BannerAd _createBannerAd() {
+    return BannerAd(
+      // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+      // https://developers.google.com/admob/android/test-ads
+      // https://developers.google.com/admob/ios/test-ads
+      adUnitId: BannerAd.testAdUnitId,
+      size: AdSize.fullBanner,
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event) {
+        var pad = 60.0;
+        if (event == MobileAdEvent.failedToLoad) {
+          pad = 0.0;
+        } else if ( event == MobileAdEvent.loaded) {
+          pad = 60.0;
+        }
+        setState(() {
+          _padding = pad;
+        });
+        print("BannerAd event is $event");
+      },
+    );
+  }
+
+  InterstitialAd _createInterstitialAd () {
+    return InterstitialAd(
+      // Replace the testAdUnitId with an ad unit id from the AdMob dash.
+      // https://developers.google.com/admob/android/test-ads
+      // https://developers.google.com/admob/ios/test-ads
+      adUnitId: InterstitialAd.testAdUnitId,
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event) {
+        print("InterstitialAd event is $event");
+      },
+    );
+  }
+
   @override
   void initState() {
+    FirebaseAdMob.instance.initialize(appId: appId);
+    _bannerAd = _createBannerAd()
+      ..load()
+      ..show(
+        // Positions the banner ad 60 pixels from the bottom of the screen
+        anchorOffset: 0.0,
+        // Positions the banner ad 10 pixels from the center of the screen to the right
+        horizontalCenterOffset: 0.0,
+        // Banner Position
+        anchorType: AnchorType.bottom,
+      );
     appInitializer.initialize();
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      _interstitialAd = _createInterstitialAd()
+          ..load()
+          ..show(
+            anchorType: AnchorType.bottom,
+            anchorOffset: 0.0,
+            horizontalCenterOffset: 0.0,
+          );
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    _interstitialAd?.dispose();
+    super.dispose();
   }
 
   @override
@@ -54,7 +135,7 @@ class _MyAppState extends State<MyApp> {
           onGenerateRoute: Router.generateRoute,
           theme: ThemeData(primaryColor: PRIMARY_COLOR),
         ),
-        padding: const EdgeInsets.only(bottom: 50),
+        padding:  EdgeInsets.only(bottom: _padding),
       ),
     );
   }

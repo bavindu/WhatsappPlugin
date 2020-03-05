@@ -1,13 +1,13 @@
-package com.example.whatsapp_plugin;
+package com.ideaboxapps.chatplus;
 
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
-import com.example.whatsapp_plugin.database.MessageRepositary;
-import com.example.whatsapp_plugin.database.WPMessage;
-import com.example.whatsapp_plugin.models.Message;
-import com.example.whatsapp_plugin.utils.CommonHelper;
+import com.ideaboxapps.chatplus.database.MessageRepositary;
+import com.ideaboxapps.chatplus.database.WPMessage;
+import com.ideaboxapps.chatplus.models.Message;
+import com.ideaboxapps.chatplus.utils.CommonHelper;
 import com.google.gson.Gson;
 
 
@@ -32,8 +32,6 @@ public class NotificationManagerService extends NotificationListenerService {
         if (packageName.equals("com.whatsapp")
                 && (sbn.getNotification().extras.get("android.isGroupConversation") != null)) {
             String sbnId = Long.toString(sbn.getNotification().when);
-            Log.i("NotficationActual","id "+sbnId);
-            Log.i("NotficationActual","id "+sbn.getNotification().extras.get("android.text"));
             boolean isAlreadyExists = messageRepositary.checkAlreadyExists(sbnId);
             if (!isAlreadyExists) {
                 Message message = CommonHelper.getCommonHelperInstance().parseMessage(sbn.getNotification().extras);
@@ -42,8 +40,7 @@ public class NotificationManagerService extends NotificationListenerService {
                         message.getSender(),
                         message.getText(),
                         message.getGroupName(),
-                        message.isGroupMessage(),
-                        message.getDate()
+                        message.isGroupMessage()
                 );
                 MainActivity.methodChanel.invokeMethod("getMessage", gson.toJson(wpMessage));
                 messageRepositary.insertMessage(wpMessage);
@@ -51,7 +48,6 @@ public class NotificationManagerService extends NotificationListenerService {
                 Log.i("NotficationActual","Already exists ");
             }
 
-            cancelNotification(sbn.getKey());
         }
     }
 
