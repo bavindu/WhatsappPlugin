@@ -1,6 +1,10 @@
 package com.ideaboxapps.chatplus;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 
 
@@ -21,14 +25,19 @@ import io.flutter.plugins.GeneratedPluginRegistrant;
 public class MainActivity extends FlutterActivity {
 
   private static final String CHANNEL = "androidBridge";
+  public static  final String CHANNEL_ID = "channel1";
   public static MethodChannel methodChanel;
   Intent serviceIntent = null;
+  Intent statusServiceIntent = null;
   MessageRepositary messageRepositary;
+  StatusGenerateListener statusGenerateListener;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     GeneratedPluginRegistrant.registerWith(this);
+    this.createNotificationChanel();
     serviceIntent = new Intent(this, NotificationManagerService.class);
+    statusServiceIntent = new Intent(MainActivity.this, StatusAutoSaveService.class);
     messageRepositary = new MessageRepositary(getApplicationContext());
     startService(serviceIntent);
     methodChanel = new MethodChannel(getFlutterView(), CHANNEL);
@@ -62,27 +71,15 @@ public class MainActivity extends FlutterActivity {
                     case "deleteAllMsges":
                         messageRepositary.deleteAllMsg();
                         break;
-                    case "setupStatusGenListener":
-//                        statusGenerateListener = new StatusGenerateListener(methodCall.argument("filePath"), methodCall.argument("appPath"));
-//                        statusGenerateListener.startWatching();
-                        Intent statusServiceIntent = new Intent(MainActivity.this, StatusAutoSaveService.class);
+                    case "stopListenToStatusGen":
+                        stopService(new Intent(MainActivity.this,StatusAutoSaveService.class));
+                        break;
+                    case "startListenToStatusGen":
                         String statusPath = methodCall.argument("filePath");
                         String appPath = methodCall.argument("appPath");
                         statusServiceIntent.putExtra("statusPath", statusPath);
                         statusServiceIntent.putExtra("appPath", appPath);
                         startService(statusServiceIntent);
-                        break;
-                    case "stopListenToStatusGen":
-                        // statusGenerateListener.stopWatching();
-                        break;
-                    case "startListenToStatusGen":
-                        // statusGenerateListener.startWatching();
-//                        Intent statusServiceIntent = new Intent(MainActivity.this, StatusGenerateListener.class);
-//                        String statusPath = methodCall.argument("filePath");
-//                        String appPath = methodCall.argument("appPath");
-//                        statusServiceIntent.putExtra("statusPath", statusPath);
-//                        statusServiceIntent.putExtra("appPath", appPath);
-//                        startService(statusServiceIntent);
                         break;
                     case "getNotificationAccess":
                         if(!NotificationManagerCompat.getEnabledListenerPackages(getApplicationContext()).contains(getApplicationContext().getPackageName())) {
@@ -96,10 +93,34 @@ public class MainActivity extends FlutterActivity {
                             result.success(false);
                         }
                         break;
+                    case "checkWhatsappInstalled":
+                        boolean isWhatsappInstalled;
+                        PackageManager packageManager = getPackageManager();
+                        try {
+                            packageManager.getPackageInfo("com.whatsapp",PackageManager.GET_ACTIVITIES);
+                            isWhatsappInstalled = true;
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                            isWhatsappInstalled = false;
+                        }
+                        result.success(isWhatsappInstalled);
+                        break;
                 }
               }
             }
     );
+  }
+
+  public void createNotificationChanel() {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+          CharSequence name = "Channel 1";
+          String description = "this is channel 1";
+          int importance = NotificationManager.IMPORTANCE_HIGH;
+          NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+          channel.setDescription(description);
+          NotificationManager notificationManager = getSystemService(NotificationManager.class);
+          notificationManager.createNotificationChannel(channel);
+      }
   }
 
 }

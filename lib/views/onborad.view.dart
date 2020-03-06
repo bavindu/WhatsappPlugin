@@ -40,7 +40,7 @@ class _OnboardViewState extends State<OnboardView> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 25.0,
-                      color: Color(0xFFbd695a),
+                      color: Color(0xFF273c75),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -56,7 +56,7 @@ class _OnboardViewState extends State<OnboardView> {
                   child: Text(
                     AppLocalizations.of(context)
                         .localizedValues['storage_permission'],
-                    textAlign: TextAlign.justify,
+                    textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 20.0, color: Colors.white),
                   ),
                 ),

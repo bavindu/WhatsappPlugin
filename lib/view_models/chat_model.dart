@@ -8,6 +8,7 @@ import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/models/chat_bubble.dart';
 import 'package:whatsapp_plugin/models/chat_head.dart';
 import 'package:whatsapp_plugin/services/android_bridge.service.dart';
+import 'package:whatsapp_plugin/services/app_initializer.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
 
 class ChatViewModel with ChangeNotifier {
@@ -16,6 +17,7 @@ class ChatViewModel with ChangeNotifier {
   List<ChatHead> chatHeadList = [];
   List<ChatBubble> displayChat = [];
   AndroidBridge androidBridge = locator<AndroidBridge>();
+  AppInitializer appInitializer = locator<AppInitializer>();
   static const platform = const MethodChannel('androidBridge');
   ViewState viewState = ViewState.Idle;
   bool gotMessages = false;
@@ -32,14 +34,21 @@ class ChatViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getAllMessages() async {
-    if (gotMessages == false) {
-      chatHeadList.clear();
-      messageList.clear();
-      messageList = await androidBridge.getAllMessages();
-      _prepareForChatHeads();
-      gotMessages = true;
+  Future<ViewState> getAllMessages() async {
+    bool isWhatsappInstalled = appInitializer.isWhatsAppInstalled;
+    if (isWhatsappInstalled) {
+      if (gotMessages == false) {
+        chatHeadList.clear();
+        messageList.clear();
+        messageList = await androidBridge.getAllMessages();
+        _prepareForChatHeads();
+        gotMessages = true;
+      }
+      return ViewState.Done;
+    } else {
+      return ViewState.NoWhatApp;
     }
+
   }
 
   Future<void> methodCallFromAndroid(MethodCall methodCall) async {

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp_plugin/clipers/menu_cliper.dart';
 import 'package:whatsapp_plugin/clipers/second_menu_cliper.dart';
+import 'package:whatsapp_plugin/constants/app-storage.dart';
 import 'package:whatsapp_plugin/constants/colors.dart';
 import 'package:whatsapp_plugin/localization/app_localization.dart';
 import 'package:whatsapp_plugin/services/android_bridge.service.dart';
@@ -121,11 +122,33 @@ class _MenuViewState extends State<MenuView> {
                               print('Service Stoped');
                               androidBridge.stopListenToStatusGen();
                             } else {
+                              androidBridge.startListenToStatusGen(appInitializer.wpStatusPath,appInitializer.rootPath+APP_DIR);
                               print('Service Started');
-                              androidBridge.startListenToStatusGen();
                             }
                           });
                         }),
+                      ),
+                    ),
+                  ),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      splashColor: Colors.tealAccent,
+                      onTap: () {
+                        Navigator.pushNamed(context, '/faq');
+                      },
+                      child: Container(
+                        child: ListTile(
+                          enabled: true,
+                          leading: const Icon(
+                            Icons.thumb_up,
+                            color: Colors.white,
+                          ),
+                          title: Text(
+                            AppLocalizations.of(context).localizedValues['rate_us'],
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ),
                     ),
                   ),

@@ -20,14 +20,16 @@ class AppLocalizations {
       'privacy_policy' : 'Privacy Policy',
       'no_msg' : 'No Masseges',
       'storage_access_req' : 'Storage Permission Required',
-      'storage_permission' : 'Chat Plus need storage permission to show you Whatsapp Status. Chat Plus does not read your personal files and data',
+      'storage_permission' : 'Chat Plus need storage permission to show you Whatsapp Status. Chat Plus does not read your personal files and data.',
       'notifi_access_req' : 'Notification Permission',
       'notification_permission' : 'Chat Plus need notification permission to read Whatsapp notification.',
       'auto_save' : 'Auto Save Status',
+      'rate_us' : 'Rate Us',
+      'whatsapp_notfound' : 'WhatsApp not installed!',
       'faq1Q' : 'Where can I find downloaded status?',
       'faq1A' : 'In Chat Plus floder',
       'faq2Q' : "Why can't I see Photos, Videos and Stickers in chats?",
-      'faq2A' : "Chat Plus display WhatsApp messages using Whatsapp notification. In WhatsApp notification there are no videos, photos and stickers",
+      'faq2A' : "Chat Plus displays WhatsApp messages using WhatsApp notification. In WhatsApp notifications, there are no videos, photos and stickers",
 
     },
     'es': {
@@ -44,11 +46,13 @@ class AppLocalizations {
       'storage_permission' : 'Chat Plus need storage permission to show you Video and Image Status. Chat Plus does not read your personal files and data',
       'notifi_access_req' : 'Notification Permission',
       'notification_permission' : 'Chat Plus need notification permission to read Whatsapp notification',
+      'rate_us' : 'Rate Us',
+      'whatsapp_notfound' : 'WhatsApp not installed!',
       'faq1Q' : 'Where can I find downloaded status?',
       'auto_save' : 'Auto Save Status',
       'faq1A' : 'In Chat Plus floder',
       'faq2Q' : "Why can't I see Photos, Videos and Stickers in chats?",
-      'faq2A' : "Chat Plus display WhatsApp messages using Whatsapp notification. In WhatsApp notification there are no videos, photos and stickers",
+      'faq2A' : "Chat Plus displays WhatsApp messages using WhatsApp notification. In WhatsApp notifications, there are no videos, photos and stickers",
     },
   };
 

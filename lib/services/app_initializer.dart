@@ -15,6 +15,9 @@ class AppInitializer {
   SharedPreferences sharedPreferences;
   String _wpStatusPath;
   bool _autoSaveStatus;
+  bool _isWhatsAppInstalled;
+
+  bool get isWhatsAppInstalled => _isWhatsAppInstalled;
 
   set autoSaveStatus(bool value) {
     _autoSaveStatus = value;
@@ -29,30 +32,30 @@ class AppInitializer {
 
   Future initialize () async {
     sharedPreferences = await SharedPreferences.getInstance();
+    _isWhatsAppInstalled = await androidBridge.checkWhatsappInstalled();
     _wpStatusPath = sharedPreferences.getString('wpStatusPath');
     _rootPath = sharedPreferences.getString('rootPath');
-    if (_wpStatusPath == null || _rootPath == null) {
-      var appDirectoryList = await getExternalStorageDirectories();
-      String appPath = appDirectoryList[0].path;
-      print('appPath '+appPath );
-      if (appPath.contains('Android')) {
-        int index = appPath.indexOf('Android');
-        _rootPath = appPath.substring(0,index);
-        _wpStatusPath = _rootPath + 'WhatsApp/Media/.Statuses';
-        sharedPreferences.setString('wpStatusPath', _wpStatusPath);
-        sharedPreferences.setString('rootPath', _rootPath);
-        print ('storage path' + _rootPath);
+    if (_isWhatsAppInstalled) {
+      if (_wpStatusPath == null || _rootPath == null) {
+        var appDirectoryList = await getExternalStorageDirectories();
+        String appPath = appDirectoryList[0].path;
+        print('appPath '+appPath );
+        if (appPath.contains('Android')) {
+          int index = appPath.indexOf('Android');
+          _rootPath = appPath.substring(0,index);
+          _wpStatusPath = _rootPath + 'WhatsApp/Media/.Statuses';
+          sharedPreferences.setString('wpStatusPath', _wpStatusPath);
+          sharedPreferences.setString('rootPath', _rootPath);
+          print ('storage path' + _rootPath);
+        }
       }
-    }  else {
-      var appDir = _rootPath+APP_DIR;
-      androidBridge.setupStatusGenListener(_wpStatusPath,appDir);
-    }
-    var autoSaveStatus = sharedPreferences.getBool('autoSaveStatus');
-    if (autoSaveStatus == null) {
-      _autoSaveStatus = false;
-      sharedPreferences.setBool('autoSaveStatus', false);
-    } else {
-      _autoSaveStatus = autoSaveStatus;
+      var autoSaveStatus = sharedPreferences.getBool('autoSaveStatus');
+      if (autoSaveStatus == null) {
+        _autoSaveStatus = false;
+        sharedPreferences.setBool('autoSaveStatus', false);
+      } else {
+        _autoSaveStatus = autoSaveStatus;
+      }
     }
   }
 

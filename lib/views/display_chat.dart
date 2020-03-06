@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:whatsapp_plugin/models/chat_bubble.dart';
 import 'package:whatsapp_plugin/router_arguments/chat_arguments.dart';
@@ -14,6 +15,7 @@ class ChatDisplayView extends StatefulWidget {
 
 class _ChatDisplayViewState extends State<ChatDisplayView> {
   ScrollController scrollController = new ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

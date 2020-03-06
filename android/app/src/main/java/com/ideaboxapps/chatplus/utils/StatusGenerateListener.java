@@ -1,9 +1,18 @@
 package com.ideaboxapps.chatplus.utils;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Build;
 import android.os.FileObserver;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import com.ideaboxapps.chatplus.MainActivity;
+import com.ideaboxapps.chatplus.R;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,30 +23,33 @@ import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 
 public class StatusGenerateListener extends FileObserver {
-    private FileObserver fileObserver;
     private String statusPath;
-    private String appPath;
     public File appDir;
     private OutputStream outputStream;
     private  FileChannel inChanel;
     private FileChannel outChanel;
+    Context context;
+    private static  StatusGenerateListener statusGenerateListenerInstance;
 
-    public StatusGenerateListener(String statusPath, String appPath) {
-        super(statusPath,FileObserver.ALL_EVENTS);
+    private StatusGenerateListener(String statusPath, String appPath, Context context) {
+        super(statusPath,FileObserver.MOVED_TO);
         this.statusPath = statusPath;
-        this.appPath = appPath;
+        this.context = context;
         appDir = new File(appPath);
         if (!appDir.exists()){
             appDir.mkdir();
         }
+        Log.i("StatusGenerateListener","Object created");
     }
 
     @Override
     public void onEvent(int event, @Nullable String path) {
         if (path != null) {
-            Log.i("StatusGenerateListener",path);
-            Log.i("Event",String.valueOf(event));
-            saveFile(path);
+            if (event == FileObserver.MOVED_TO) {
+                Log.i("StatusGenerateListener",path);
+                Log.i("Event",String.valueOf(event));
+                saveFile(path);
+            }
         }
     }
 
@@ -65,12 +77,39 @@ public class StatusGenerateListener extends FileObserver {
                 if (outChanel != null) {
                     outChanel.close();
                 }
+                this.createNotification();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
 
+
     }
+
+    public static synchronized StatusGenerateListener getStatusGenerateListener(String statusPath, String appPath, Context context) {
+        if (statusGenerateListenerInstance == null) {
+            statusGenerateListenerInstance = new StatusGenerateListener(statusPath,appPath,context);
+        }
+         return  statusGenerateListenerInstance;
+    }
+
+
+    @Override
+    protected void finalize() {
+        super.finalize();
+        Log.i("StatusGenerateListener","Garbage Collected");
+    }
+
+    public void  createNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("Chat Plus")
+                .setContentText("Status saved")
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+        notificationManagerCompat.notify(1,builder.build());
+    }
+
 
 }

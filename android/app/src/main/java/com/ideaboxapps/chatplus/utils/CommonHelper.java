@@ -1,5 +1,6 @@
 package com.ideaboxapps.chatplus.utils;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import com.ideaboxapps.chatplus.database.WPMessage;
@@ -62,4 +63,5 @@ public class CommonHelper {
         }
         return  stringMsgList;
     }
+
 }

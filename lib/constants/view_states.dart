@@ -1,4 +1,6 @@
 enum ViewState {
   Idle,
-  Busy
+  Busy,
+  Done,
+  NoWhatApp,
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 
@@ -41,16 +42,12 @@ class AndroidBridge {
     platform.invokeMethod('getNotificationAccess');
   }
 
-  void setupStatusGenListener(String filePath, String appPath) {
-    platform.invokeMethod('setupStatusGenListener', {'filePath': filePath, 'appPath': appPath});
-  }
-
   void stopListenToStatusGen() {
     platform.invokeMethod('stopListenToStatusGen');
   }
 
-  void startListenToStatusGen() {
-    platform.invokeMethod('startListenToStatusGen');
+  void startListenToStatusGen(String filePath, String appPath) {
+    platform.invokeMethod('startListenToStatusGen',{'filePath': filePath, 'appPath': appPath});
   }
 
 
@@ -58,6 +55,12 @@ class AndroidBridge {
   Future checkNotificationAccess() async {
     bool hasNotificationAccess = await platform.invokeMethod('checkNotificationAccess');
     return hasNotificationAccess;
+  }
+
+  Future<bool> checkWhatsappInstalled() async{
+    bool isWhatsappInstalled = false;
+    isWhatsappInstalled = await platform.invokeMethod('checkWhatsappInstalled');
+    return isWhatsappInstalled;
   }
 
 

@@ -7,6 +7,7 @@ import 'package:whatsapp_plugin/services/app_initializer.dart';
 import 'package:whatsapp_plugin/services/common_helper.service.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
 import 'package:whatsapp_plugin/view_models/images_model.dart';
+import 'package:vector_math/vector_math_64.dart' show Vector3;
 
 class ImagePreview extends StatefulWidget {
   final int fileIndex;
@@ -21,6 +22,8 @@ class _ImagePreviewState extends State<ImagePreview> {
   List imageFileList;
   var androidBridge = locator<AndroidBridge>();
   var commonHelper = locator<CommonHelperService>();
+  double _scale = 1.0;
+  double _previousScale = 1.0;
   AppInitializer appInitializer = locator<AppInitializer>();
   @override
   void initState() {
@@ -38,10 +41,38 @@ class _ImagePreviewState extends State<ImagePreview> {
         body: PageView.builder(
           itemBuilder: (BuildContext context, int index) => Center(
             child: Container(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
               child: Center(
-                child: Image.file(
-                  imageFileList[index].imageFile,
-                  fit: BoxFit.cover,
+                child: GestureDetector(
+                  onScaleStart: (ScaleStartDetails details){
+                    _previousScale = _scale;
+                    print(details);
+                    setState(() {
+
+                    });
+                  },
+                  onScaleUpdate: (ScaleUpdateDetails details){
+                    print(details);
+                    _scale = _previousScale * details.scale;
+                    setState(() {
+
+                    });
+                  },
+                  onScaleEnd: (ScaleEndDetails details) {
+                    print(details);
+                    _previousScale = 1.0;
+                    _scale = 1.0;
+                    setState(() {
+                    });
+                  },
+                  child: Transform.scale(
+                    alignment: Alignment.center,
+                    scale: _scale,
+                    child: Image.file(
+                      imageFileList[index].imageFile,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -87,7 +118,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                       elevation: 10.0,
                       shape: CircleBorder(side: BorderSide.none),
                       onPressed: () {
-                        commonHelper.saveFile(appInitializer.rootPath,imageFileList[fileIndex].imageFile, context);
+                        commonHelper.saveFile(appInitializer.wpStatusPath,imageFileList[fileIndex].imageFile, context);
                       },
                       child: Container(
                         padding: EdgeInsets.all(2.0),
