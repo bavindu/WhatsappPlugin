@@ -120,14 +120,14 @@ class ImagesViewModel with ChangeNotifier {
       print(savePath);
       try {
         imageFile.copySync(savePath);
-        commonHelperService.showSnakBar(context, 'Saved Successfully');
       } catch (error) {
         if (error is FileSystemException) {
           new Directory(appDir).create();
-          imageFile.copy(savePath);
+          imageFile.copySync(savePath);
         }
       }
     });
+    commonHelperService.showSnakBar(context, 'Saved Successfully');
     this.handleTabChange();
   }
 

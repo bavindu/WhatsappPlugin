@@ -9,6 +9,7 @@ class ChatHead {
   bool _isGroupMsg;
   String _diplayDate;
   DateTime now = DateTime.now();
+  String avatarName;
   CommonHelperService commonHelperService = locator<CommonHelperService>();
 
 
@@ -19,6 +20,13 @@ class ChatHead {
     this._date = date;
     this.isGroupMsg = isGroupMsg;
     this._diplayDate = commonHelperService.setDisplayDate(date);
+    if (isGroupMsg) {
+      setAvatarName(groupName);
+    } else {
+      setAvatarName(sender);
+    }
+
+
   }
 
 
@@ -54,5 +62,9 @@ class ChatHead {
   }
 
   String get diplayDate => _diplayDate;
+
+  void setAvatarName(String name) {
+    avatarName = String.fromCharCode(name.runes.first);
+  }
 
 }

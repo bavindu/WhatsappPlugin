@@ -43,43 +43,6 @@ class _MenuViewState extends State<MenuView> {
                   SizedBox(
                     height: 50.0,
                   ),
-                  InkWell(
-                    splashColor: Colors.lime,
-                    onTap: () {
-                      androidBridge.deleterAllMessages();
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (_) => AlertDialog(
-                          title: Text('Do you want to delete all message?'),
-                          actions: <Widget>[
-                            FlatButton(child: Text('No'),onPressed: () {
-                              Navigator.pop(context);
-                            },),
-                            FlatButton(child: Text('Yes'),onPressed: (){
-                              Provider.of<ChatViewModel>(context, listen: false)
-                                  .deleteAllMessage();
-                              Navigator.pop(context);
-                            },),
-
-                          ],
-                        ),
-                      );
-                      print('deleye msg');
-                    },
-                    child: ListTile(
-                      enabled: true,
-                      leading: const Icon(
-                        Icons.delete,
-                        color: Colors.white,
-                      ),
-                      title: Text(
-                        AppLocalizations.of(context)
-                            .localizedValues['delete_message'],
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
                   Material(
                     color: Colors.transparent,
                     child: InkWell(
@@ -135,7 +98,7 @@ class _MenuViewState extends State<MenuView> {
                     child: InkWell(
                       splashColor: Colors.tealAccent,
                       onTap: () {
-                        Navigator.pushNamed(context, '/faq');
+                        androidBridge.rateUs();
                       },
                       child: Container(
                         child: ListTile(
@@ -149,6 +112,42 @@ class _MenuViewState extends State<MenuView> {
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    splashColor: Colors.lime,
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (_) => AlertDialog(
+                          title: Text('Do you want to delete all message?'),
+                          actions: <Widget>[
+                            FlatButton(child: Text('No'),onPressed: () {
+                              Navigator.pop(context);
+                            },),
+                            FlatButton(child: Text('Yes'),onPressed: (){
+                              Provider.of<ChatViewModel>(context, listen: false)
+                                  .deleteAllMessage();
+                              Navigator.pop(context);
+                            },),
+
+                          ],
+                        ),
+                      );
+                      print('deleye msg');
+                    },
+                    child: ListTile(
+                      enabled: true,
+                      leading: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                      title: Text(
+                        AppLocalizations.of(context)
+                            .localizedValues['delete_message'],
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),

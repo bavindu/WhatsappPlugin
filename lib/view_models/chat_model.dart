@@ -3,18 +3,19 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:whatsapp_plugin/constants/app-storage.dart';
 import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/models/chat_bubble.dart';
 import 'package:whatsapp_plugin/models/chat_head.dart';
+import 'package:whatsapp_plugin/models/message.dart';
 import 'package:whatsapp_plugin/services/android_bridge.service.dart';
 import 'package:whatsapp_plugin/services/app_initializer.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
+import 'package:whatsapp_plugin/widgets/chat_head_container.dart';
 
 class ChatViewModel with ChangeNotifier {
-  String _text = "Hello";
-  List messageList = [];
+  List<Message> messageList = [];
   List<ChatHead> chatHeadList = [];
+  List<ChatHeadContainer> chatHeadContainerList = [];
   List<ChatBubble> displayChat = [];
   AndroidBridge androidBridge = locator<AndroidBridge>();
   AppInitializer appInitializer = locator<AppInitializer>();
@@ -27,12 +28,6 @@ class ChatViewModel with ChangeNotifier {
     platform.setMethodCallHandler(methodCallFromAndroid);
   }
 
-  String get text => _text;
-
-  set text(String value) {
-    _text = value;
-    notifyListeners();
-  }
 
   Future<ViewState> getAllMessages() async {
     bool isWhatsappInstalled = appInitializer.isWhatsAppInstalled;
@@ -40,9 +35,18 @@ class ChatViewModel with ChangeNotifier {
       if (gotMessages == false) {
         chatHeadList.clear();
         messageList.clear();
-        messageList = await androidBridge.getAllMessages();
-        _prepareForChatHeads();
-        gotMessages = true;
+        var list;
+        try {
+          list = await androidBridge.getAllMessages();
+        } catch (e) {
+          print("error");
+          print(e);
+        }
+        messageList = list;
+        if (messageList != null) {
+          _prepareForChatHeads();
+          gotMessages = true;
+        }
       }
       return ViewState.Done;
     } else {
@@ -55,24 +59,25 @@ class ChatViewModel with ChangeNotifier {
     switch (methodCall.method) {
       case "getMessage":
         String stringMessage = methodCall.arguments.toString();
-        Map<String, dynamic> decodedMessage = await jsonDecode(stringMessage);
+        Map decodedMessageMap = jsonDecode(stringMessage);
+        var decodedMessage = Message.fromJson(decodedMessageMap);
         DateTime decodeMsgDate = DateTime.fromMillisecondsSinceEpoch(
-            int.parse(decodedMessage['id']));
+            int.parse(decodedMessage.id));
         if (chatHeadList.isNotEmpty) {
           int removeIndex;
           for (var i = 0; i < chatHeadList.length; i++) {
-            if (decodedMessage['isGroupMessage'] == true) {
-              if (chatHeadList[i].groupName == decodedMessage['groupName']) {
-                chatHeadList[i].text = decodedMessage['text'];
-                chatHeadList[i].sender = decodedMessage['sender'];
+            if (decodedMessage.isGroupMessage == true) {
+              if (chatHeadList[i].groupName == decodedMessage.groupName) {
+                chatHeadList[i].text = decodedMessage.text;
+                chatHeadList[i].sender = decodedMessage.sender;
                 chatHeadList[i].date = decodeMsgDate;
                 removeIndex = i;
                 break;
               }
             } else {
               if (chatHeadList[i].isGroupMsg == false &&
-                  (chatHeadList[i].sender == decodedMessage['sender'])) {
-                chatHeadList[i].text = decodedMessage['text'];
+                  (chatHeadList[i].sender == decodedMessage.sender)) {
+                chatHeadList[i].text = decodedMessage.text;
                 chatHeadList[i].date = decodeMsgDate;
                 removeIndex = i;
                 break;
@@ -86,27 +91,26 @@ class ChatViewModel with ChangeNotifier {
             chatHeadList.insert(
                 0,
                 new ChatHead(
-                    decodedMessage['sender'],
-                    decodedMessage['text'],
-                    decodedMessage['groupName'],
+                    decodedMessage.sender,
+                    decodedMessage.text,
+                    decodedMessage.groupName,
                     decodeMsgDate,
-                    decodedMessage['isGroupMessage']));
+                    decodedMessage.isGroupMessage));
           }
         } else {
           chatHeadList.add(new ChatHead(
-              decodedMessage['sender'],
-              decodedMessage['text'],
-              decodedMessage['groupName'],
+              decodedMessage.sender,
+              decodedMessage.text,
+              decodedMessage.groupName,
               decodeMsgDate,
-              decodedMessage['isGroupMessage']));
+              decodedMessage.isGroupMessage));
         }
         if (displayChat.isNotEmpty) {
           displayChat.add(new ChatBubble(
-              decodedMessage['text'],
-              decodedMessage['sender'],
+              decodedMessage.text,
+              decodedMessage.sender,
               decodeMsgDate,
-              decodedMessage['isGroupMessage']));
-          scrollController.jumpTo(scrollController.position.maxScrollExtent);
+              decodedMessage.isGroupMessage));
         }
         messageList.add(decodedMessage);
         notifyListeners();
@@ -116,43 +120,42 @@ class ChatViewModel with ChangeNotifier {
   void _prepareForChatHeads() {
     for (var i = 0; i < messageList.length; i++) {
       var item = messageList[i];
-      DateTime itemDate =
-          DateTime.fromMillisecondsSinceEpoch(int.parse(item['id']));
+      DateTime itemDate = DateTime.fromMillisecondsSinceEpoch(int.parse(item.id));
       if (chatHeadList.isEmpty) {
-        chatHeadList.add(new ChatHead(item['sender'], item['text'],
-            item['groupName'], itemDate, item['isGroupMessage']));
+        chatHeadList.add(new ChatHead(item.sender, item.text,
+            item.groupName, itemDate, item.isGroupMessage));
       } else {
         var loopBroke = false;
         for (var j = 0; j < chatHeadList.length; j++) {
-          if (item['isGroupMessage'] == true) {
-            if (chatHeadList[j].groupName == item['groupName'] &&
+          if (item.isGroupMessage == true) {
+            if (chatHeadList[j].groupName == item.groupName &&
                 chatHeadList[j].date.isBefore(itemDate)) {
-              chatHeadList[j].sender = item['sender'];
-              chatHeadList[j].text = item['text'];
+              chatHeadList[j].sender = item.sender;
+              chatHeadList[j].text = item.text;
               chatHeadList[j].date = itemDate;
               loopBroke = true;
               break;
-            } else if (chatHeadList[j].groupName == item['groupName']) {
+            } else if (chatHeadList[j].groupName == item.groupName) {
               loopBroke = true;
               break;
             }
           } else if (!chatHeadList[j].isGroupMsg &&
-              item['isGroupMessage'] == false) {
-            if (chatHeadList[j].sender == item['sender'] &&
+              item.isGroupMessage == false) {
+            if (chatHeadList[j].sender == item.sender &&
                 chatHeadList[j].date.isBefore(itemDate)) {
-              chatHeadList[j].text = item['text'];
+              chatHeadList[j].text = item.text;
               chatHeadList[j].date = itemDate;
               loopBroke = true;
               break;
-            } else if (chatHeadList[j].sender == item['sender']) {
+            } else if (chatHeadList[j].sender == item.sender) {
               loopBroke = true;
               break;
             }
           }
         }
         if (loopBroke == false) {
-          chatHeadList.add(new ChatHead(item['sender'], item['text'],
-              item['groupName'], itemDate, item['isGroupMessage']));
+          chatHeadList.add(new ChatHead(item.sender, item.text,
+              item.groupName, itemDate, item.isGroupMessage));
         }
       }
     }
@@ -173,20 +176,20 @@ class ChatViewModel with ChangeNotifier {
     for (var i = 0; i < messageList.length; i++) {
       int addingIndex;
       if (!isGroupMsg) {
-        if (messageList[i]['isGroupMessage'] == false &&
-            messageList[i]['sender'] == sender) {
+        if (messageList[i].isGroupMessage == false &&
+            messageList[i].sender == sender) {
           addingIndex = i;
         }
       } else {
-        if (messageList[i]['groupName'] == groupName) {
+        if (messageList[i].groupName == groupName) {
           addingIndex = i;
         }
       }
       if (addingIndex != null) {
         DateTime time = DateTime.fromMillisecondsSinceEpoch(
-            int.parse(messageList[i]['id']));
-        ChatBubble chatBubble = new ChatBubble(messageList[i]['text'],
-            messageList[i]['sender'], time, messageList[i]['isGroupMessage']);
+            int.parse(messageList[i].id));
+        ChatBubble chatBubble = new ChatBubble(messageList[i].text,
+            messageList[i].sender, time, messageList[i].isGroupMessage);
         displayChat.add(chatBubble);
         print(chatBubble.date.toString());
       }
@@ -206,6 +209,7 @@ class ChatViewModel with ChangeNotifier {
     messageList.clear();
     displayChat.clear();
     chatHeadList.clear();
+    androidBridge.deleterAllMessages();
     notifyListeners();
   }
 }

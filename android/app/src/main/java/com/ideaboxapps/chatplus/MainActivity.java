@@ -2,10 +2,13 @@ package com.ideaboxapps.chatplus;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.widget.Toast;
 
 
 import androidx.core.app.NotificationManagerCompat;
@@ -48,7 +51,7 @@ public class MainActivity extends FlutterActivity {
                 switch (methodCall.method) {
                     case "share":
                         Intent shareIntent = FlutterMessageHandler.getFlutterMessageHandlerInstance().share((String) methodCall.argument("filePath"),getApplicationContext(), (boolean)methodCall.argument("isImage"));
-                        startActivity(Intent.createChooser(shareIntent, "Share"));
+                        startActivity(Intent.createChooser(shareIntent, "Share Via"));
                         break;
                     case "shareOnWhatsapp":
                         Intent shareOnWhatsappIntent = FlutterMessageHandler.getFlutterMessageHandlerInstance().shareOnWhatsapp((String) methodCall.argument("filePath"),getApplicationContext(), (boolean)methodCall.argument("isImage"));
@@ -66,7 +69,8 @@ public class MainActivity extends FlutterActivity {
                         break;
                     case "getAllMessages":
                         List<WPMessage> messageList = messageRepositary.getAllMessages();
-                        result.success(CommonHelper.getCommonHelperInstance().parseList(messageList));
+                        List<String> parsedList = CommonHelper.getCommonHelperInstance().parseList(messageList);
+                        result.success(parsedList);
                         break;
                     case "deleteAllMsges":
                         messageRepositary.deleteAllMsg();
@@ -104,6 +108,18 @@ public class MainActivity extends FlutterActivity {
                             isWhatsappInstalled = false;
                         }
                         result.success(isWhatsappInstalled);
+                        break;
+                    case "toastMessage":
+                        String msg = methodCall.arguments();
+                        Toast toast=Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_LONG);
+                        toast.show();
+                        break;
+                    case "rateUs":
+                        try {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName())));
+                        } catch (ActivityNotFoundException e) {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + getPackageName())));
+                        }
                         break;
                 }
               }

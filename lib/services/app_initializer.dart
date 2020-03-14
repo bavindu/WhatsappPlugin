@@ -64,7 +64,7 @@ class AppInitializer {
     bool hasNotificationAccess = await checkNotificationAccess();
     if (permissionStatus == PermissionStatus.granted && hasNotificationAccess) {
       return AppPermissionStatus.Granted;
-    } else if(hasNotificationAccess && permissionStatus == PermissionStatus.disabled) {
+    } else if(hasNotificationAccess && permissionStatus == PermissionStatus.denied) {
       return AppPermissionStatus.NoStorageAccess;
     } else if (!hasNotificationAccess && permissionStatus == PermissionStatus.granted)  {
       return AppPermissionStatus.NoNotificationAccess;

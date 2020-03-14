@@ -101,14 +101,14 @@ class VideosViewModel with ChangeNotifier {
       String savePath = appDir + '/' +videoName;
       try {
         videoFile.copySync(savePath);
-        commonHelperService.showSnakBar(context, 'Saved Successfully');
       } catch (error) {
         if ( error is FileSystemException) {
           new Directory(appDir).create();
-          videoFile.copy(savePath);
+          videoFile.copySync(savePath);
         }
       }
     });
+    commonHelperService.showSnakBar(context, 'Saved Successfully');
     handleTabChange();
   }
 
@@ -123,7 +123,8 @@ class VideosViewModel with ChangeNotifier {
   }
 
   void selectAll() {
-    if (_selectedVideoList.length > 0) {
+    if (_videosList.length >_selectedVideoList.length ) {
+      selectingMode = true;
       _selectedVideoList.clear();
       _videosList.forEach((video) {
         video.isSelected = true;

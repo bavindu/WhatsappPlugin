@@ -23,9 +23,7 @@ class ChatHeadContainer extends StatelessWidget {
                 child: CircleAvatar(
                   backgroundColor: avatarColor,
                   child: Text(
-                      chatHead.isGroupMsg
-                      ? chatHead.groupName[0]
-                      : chatHead.sender[0],style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
+                      chatHead.avatarName, style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),),
                 ),
               ),
               Column(

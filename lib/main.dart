@@ -37,7 +37,6 @@ class _MyAppState extends State<MyApp> {
   );
 
   BannerAd _bannerAd;
-  InterstitialAd _interstitialAd;
   AppInitializer appInitializer = locator<AppInitializer>();
   double _padding = 0.0;
 
@@ -64,19 +63,6 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  InterstitialAd _createInterstitialAd () {
-    return InterstitialAd(
-      // Replace the testAdUnitId with an ad unit id from the AdMob dash.
-      // https://developers.google.com/admob/android/test-ads
-      // https://developers.google.com/admob/ios/test-ads
-      adUnitId: InterstitialAd.testAdUnitId,
-      targetingInfo: targetingInfo,
-      listener: (MobileAdEvent event) {
-        print("InterstitialAd event is $event");
-      },
-    );
-  }
-
   @override
   void initState() {
     FirebaseAdMob.instance.initialize(appId: appId);
@@ -91,22 +77,12 @@ class _MyAppState extends State<MyApp> {
         anchorType: AnchorType.bottom,
       );
     appInitializer.initialize();
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      _interstitialAd = _createInterstitialAd()
-          ..load()
-          ..show(
-            anchorType: AnchorType.bottom,
-            anchorOffset: 0.0,
-            horizontalCenterOffset: 0.0,
-          );
-    });
     super.initState();
   }
 
   @override
   void dispose() {
     _bannerAd?.dispose();
-    _interstitialAd?.dispose();
     super.dispose();
   }
 
@@ -115,10 +91,10 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<ImagesViewModel>(
-            builder: (_) => ImagesViewModel()),
+            create: (_) => ImagesViewModel()),
         ChangeNotifierProvider<VideosViewModel>(
-            builder: (_) => VideosViewModel()),
-        ChangeNotifierProvider<ChatViewModel>(builder: (_) => ChatViewModel())
+            create: (_) => VideosViewModel()),
+        ChangeNotifierProvider<ChatViewModel>(create: (_) => ChatViewModel())
       ],
       child: Container(
         child: MaterialApp(

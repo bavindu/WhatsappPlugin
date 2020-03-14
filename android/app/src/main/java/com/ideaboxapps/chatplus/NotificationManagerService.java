@@ -3,19 +3,20 @@ package com.ideaboxapps.chatplus;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.gson.JsonObject;
 import com.ideaboxapps.chatplus.database.MessageRepositary;
 import com.ideaboxapps.chatplus.database.WPMessage;
 import com.ideaboxapps.chatplus.models.Message;
 import com.ideaboxapps.chatplus.utils.CommonHelper;
-import com.google.gson.Gson;
+
 
 
 
 public class NotificationManagerService extends NotificationListenerService {
 
     MessageRepositary messageRepositary;
-    Gson gson = new Gson();
 
     @Override
     public void onCreate() {
@@ -42,7 +43,13 @@ public class NotificationManagerService extends NotificationListenerService {
                         message.getGroupName(),
                         message.isGroupMessage()
                 );
-                MainActivity.methodChanel.invokeMethod("getMessage", gson.toJson(wpMessage));
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("id",wpMessage.getId());
+                jsonObject.addProperty("groupName",wpMessage.getGroupName());
+                jsonObject.addProperty("isGroupMessage",wpMessage.getIsGroupMessage());
+                jsonObject.addProperty("text",wpMessage.getText());
+                jsonObject.addProperty("sender",wpMessage.getSender());
+                MainActivity.methodChanel.invokeMethod("getMessage", jsonObject.toString());
                 messageRepositary.insertMessage(wpMessage);
             } else {
                 Log.i("NotficationActual","Already exists ");

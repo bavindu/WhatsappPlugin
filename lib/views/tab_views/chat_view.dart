@@ -33,33 +33,37 @@ class _ChatViewState extends State<ChatView> {
               if (snapshot.data == ViewState.Done) {
                 if (chatViewModel.chatHeadList.length > 0) {
                   return Container(
-                    child: ListView.builder(
-                        itemCount: chatViewModel.chatHeadList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            child: Container(
-                              color: Colors.white,
-                              child: Column(
-                                children: <Widget>[
-                                  ChatHeadContainer(
-                                    chatViewModel.chatHeadList[index],
-                                    commonHelperService.getAvatarColor(index),
-                                  ),
-                                  Divider(),
-                                ],
+                    child: Scrollbar(
+                      child: ListView.builder(
+                          itemCount: chatViewModel.chatHeadList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              child: Container(
+                                color: Colors.white,
+                                child: Column(
+                                  children: <Widget>[
+                                    ChatHeadContainer(
+                                      chatViewModel.chatHeadList[index],
+                                      commonHelperService.getAvatarColor(index),
+                                    ),
+                                    Divider(),
+                                  ],
+                                ),
                               ),
-                            ),
-                            onTap: () {
-                              print('tapped');
-                              Navigator.pushNamed(context, '/chatDisplay',
-                                  arguments: new ChatArguments(
-                                      chatViewModel.chatHeadList[index].sender,
-                                      chatViewModel.chatHeadList[index].groupName,
-                                      chatViewModel
-                                          .chatHeadList[index].isGroupMsg));
-                            },
-                          );
-                        }),
+                              onTap: () {
+                                print('tapped');
+                                Navigator.pushNamed(context, '/chatDisplay',
+                                    arguments: new ChatArguments(
+                                        chatViewModel
+                                            .chatHeadList[index].sender,
+                                        chatViewModel
+                                            .chatHeadList[index].groupName,
+                                        chatViewModel
+                                            .chatHeadList[index].isGroupMsg));
+                              },
+                            );
+                          }),
+                    ),
                   );
                 } else {
                   return Container(
@@ -75,19 +79,20 @@ class _ChatViewState extends State<ChatView> {
                             widthFactor: 0.5,
                           ),
                           Text(
-                            AppLocalizations.of(context).localizedValues['no_msg'],
+                            AppLocalizations.of(context)
+                                .localizedValues['no_msg'],
                             style: TextStyle(fontSize: 20.0),
                           ),
                           Flexible(
                               child: FractionallySizedBox(
-                                heightFactor: 0.1,
-                              ))
+                            heightFactor: 0.1,
+                          ))
                         ],
                       ),
                     ),
                   );
                 }
-              }  else {
+              } else {
                 return Container(
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 30.0),
@@ -96,24 +101,26 @@ class _ChatViewState extends State<ChatView> {
                       children: <Widget>[
                         FractionallySizedBox(
                           child: Container(
-                            child: Image.asset('assets/images/whatsappnotfound.png'),
+                            child: Image.asset(
+                                'assets/images/whatsappnotfound.png'),
                           ),
                           widthFactor: 0.5,
                         ),
                         Text(
-                          AppLocalizations.of(context).localizedValues['whatsapp_notfound'],
+                          AppLocalizations.of(context)
+                              .localizedValues['whatsapp_notfound'],
                           style: TextStyle(fontSize: 20.0),
                         ),
                         Flexible(
                             child: FractionallySizedBox(
-                              heightFactor: 0.1,
-                            ))
+                          heightFactor: 0.1,
+                        ))
                       ],
                     ),
                   ),
                 );
               }
-            }  else {
+            } else {
               return Center(
                 child: CircularProgressIndicator(),
               );

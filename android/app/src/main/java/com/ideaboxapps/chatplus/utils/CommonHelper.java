@@ -1,27 +1,20 @@
 package com.ideaboxapps.chatplus.utils;
 
-import android.content.pm.PackageManager;
+
 import android.os.Bundle;
 
+import com.google.gson.JsonObject;
 import com.ideaboxapps.chatplus.database.WPMessage;
 import com.ideaboxapps.chatplus.models.Message;
-import com.google.gson.Gson;
 
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class CommonHelper {
 
     private static  CommonHelper instance;
-    private Gson gson;
-    private SimpleDateFormat simpleDateFormat;
 
-    private CommonHelper () {
-        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
-        gson = new Gson();
-    }
 
 
     public static synchronized CommonHelper getCommonHelperInstance() {
@@ -58,8 +51,14 @@ public class CommonHelper {
     public List<String> parseList(List<WPMessage> wpMessageList) {
         ArrayList<String> stringMsgList = new ArrayList<>();
         for (int i = 0; i < wpMessageList.size(); i++) {
-            String message = gson.toJson(wpMessageList.get(i));
-            stringMsgList.add(message);
+            JsonObject jsonObject = new JsonObject();
+            WPMessage wpMessage = wpMessageList.get(i);
+            jsonObject.addProperty("id",wpMessage.getId());
+            jsonObject.addProperty("groupName",wpMessage.getGroupName());
+            jsonObject.addProperty("isGroupMessage",wpMessage.getIsGroupMessage());
+            jsonObject.addProperty("text",wpMessage.getText());
+            jsonObject.addProperty("sender",wpMessage.getSender());
+            stringMsgList.add(jsonObject.toString());
         }
         return  stringMsgList;
     }

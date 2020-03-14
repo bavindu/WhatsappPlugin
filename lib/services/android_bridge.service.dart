@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:whatsapp_plugin/models/message.dart';
 
 
 class AndroidBridge {
@@ -11,6 +12,10 @@ class AndroidBridge {
     platform.invokeMethod('share', {'filePath': filePath, 'isImage': isImage});
 
   }
+
+  void toastMessage(String msg) {
+    platform.invokeMethod('toastMessage', msg);
+  }
   
   void shareOnWhatsAppImage(String filePath, bool isImage) {
     platform.invokeMethod('shareOnWhatsapp', {'filePath': filePath, 'isImage': isImage});
@@ -20,13 +25,15 @@ class AndroidBridge {
     platform.invokeMethod('deleteAllMsges');
   }
 
-  Future<List> getAllMessages() async{
-    List decodedMessages = [];
+  Future<List<Message>> getAllMessages() async{
+    List<Message> decodedMessages = [];
     List messages = await platform.invokeMethod('getAllMessages');
     for(var i = 0; i < messages.length; i++) {
-      Map<String,dynamic> decodedItem = await jsonDecode(messages[i]);
-      decodedMessages.add(decodedItem);
+      Map decodeMsgMap = jsonDecode(messages[i]);
+      var message = Message.fromJson(decodeMsgMap);
+      decodedMessages.add(message);
     }
+    print(decodedMessages.length);
     return decodedMessages;
   }
 
@@ -44,6 +51,10 @@ class AndroidBridge {
 
   void stopListenToStatusGen() {
     platform.invokeMethod('stopListenToStatusGen');
+  }
+
+  void rateUs() {
+    platform.invokeMethod('rateUs');
   }
 
   void startListenToStatusGen(String filePath, String appPath) {

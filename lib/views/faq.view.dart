@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_plugin/constants/colors.dart';
 import 'package:whatsapp_plugin/localization/app_localization.dart';
@@ -27,12 +28,16 @@ class _FAQViewState extends State<FAQView> {
             }),
       ),
       body: Container(
-        child: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        child: Scrollbar(child: ListView(
           children: <Widget>[
             FAQCard(AppLocalizations.of(context).localizedValues['faq1Q'],AppLocalizations.of(context).localizedValues['faq1A']),
-            FAQCard(AppLocalizations.of(context).localizedValues['faq2Q'],AppLocalizations.of(context).localizedValues['faq2A'])
+            FAQCard(AppLocalizations.of(context).localizedValues['faq2Q'],AppLocalizations.of(context).localizedValues['faq2A']),
+            FAQCard(AppLocalizations.of(context).localizedValues['faq5Q'],AppLocalizations.of(context).localizedValues['faq5A']),
+            FAQCard(AppLocalizations.of(context).localizedValues['faq3Q'],AppLocalizations.of(context).localizedValues['faq3A']),
+            FAQCard(AppLocalizations.of(context).localizedValues['faq4Q'],AppLocalizations.of(context).localizedValues['faq4A'])
           ],
-        ),
+        ),)
       ),
     );
   }
