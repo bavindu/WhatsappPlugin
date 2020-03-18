@@ -57,8 +57,16 @@ class AndroidBridge {
     platform.invokeMethod('rateUs');
   }
 
+  void invite() {
+    platform.invokeMethod('invite');
+  }
+  
   void startListenToStatusGen(String filePath, String appPath) {
     platform.invokeMethod('startListenToStatusGen',{'filePath': filePath, 'appPath': appPath});
+  }
+
+  void mediaScan(String filePath) {
+    platform.invokeMethod('mediaScan',{'filePath': filePath});
   }
 
 

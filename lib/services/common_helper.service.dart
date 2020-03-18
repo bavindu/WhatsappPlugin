@@ -3,9 +3,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:whatsapp_plugin/constants/app-storage.dart';
+import 'package:whatsapp_plugin/services/service_locator.dart';
+
+import 'android_bridge.service.dart';
 
 
 class CommonHelperService {
+
+  AndroidBridge androidBridge = locator<AndroidBridge>();
   static List<Color> colorList = [
     Color(0xffEE0754),
     Color(0xffEE07C4),
@@ -33,12 +38,13 @@ class CommonHelperService {
     String fileName = filePath.split('/').last;
     String savePath = appDir + '/' + fileName;
     try {
-      file.copySync(savePath);
+      File copiedFile = file.copySync(savePath);
       showSnakBar(context, 'Saved Successfully');
+      androidBridge.mediaScan(copiedFile.path);
     } catch (error) {
       if (error is FileSystemException) {
-        new Directory(appDir).create();
-        file.copy(savePath);
+        new Directory(appDir).createSync();
+        file.copySync(savePath);
       }
     }
   }

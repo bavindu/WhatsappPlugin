@@ -68,7 +68,8 @@ class _OnboradNotificationAccessViewState
                     onPressed: () {
                       appInitializer.requestNotificationAccess();
                     },
-                    child: Text('Allow Access'),
+                    child: Text(AppLocalizations.of(context)
+                        .localizedValues['allow_acces'],),
                   ),
                 ),
                 Container(
@@ -81,7 +82,16 @@ class _OnboradNotificationAccessViewState
                         if (result == true) {
                           Navigator.pushNamed(context, '/');
                         } else {
-                          print('not permited');
+                          showDialog(context: context,builder: (_) => AlertDialog(
+                            title: Text(AppLocalizations.of(context).localizedValues['allow_access_dialog']),
+                            actions: <Widget>[
+                              FlatButton(child: Text(AppLocalizations.of(context).localizedValues['ok']),onPressed: () {
+                                Navigator.pop(context);
+                              },),
+
+
+                            ],
+                          ),);
                         }
                       });
                     },

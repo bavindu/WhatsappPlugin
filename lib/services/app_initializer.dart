@@ -39,14 +39,12 @@ class AppInitializer {
       if (_wpStatusPath == null || _rootPath == null) {
         var appDirectoryList = await getExternalStorageDirectories();
         String appPath = appDirectoryList[0].path;
-        print('appPath '+appPath );
         if (appPath.contains('Android')) {
           int index = appPath.indexOf('Android');
           _rootPath = appPath.substring(0,index);
           _wpStatusPath = _rootPath + 'WhatsApp/Media/.Statuses';
           sharedPreferences.setString('wpStatusPath', _wpStatusPath);
           sharedPreferences.setString('rootPath', _rootPath);
-          print ('storage path' + _rootPath);
         }
       }
       var autoSaveStatus = sharedPreferences.getBool('autoSaveStatus');

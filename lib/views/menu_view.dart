@@ -115,6 +115,28 @@ class _MenuViewState extends State<MenuView> {
                       ),
                     ),
                   ),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      splashColor: Colors.tealAccent,
+                      onTap: () {
+                        androidBridge.invite();
+                      },
+                      child: Container(
+                        child: ListTile(
+                          enabled: true,
+                          leading: const Icon(
+                            Icons.share,
+                            color: Colors.white,
+                          ),
+                          title: Text(
+                          AppLocalizations.of(context).localizedValues['invite'],
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   InkWell(
                     splashColor: Colors.lime,
                     onTap: () {
@@ -122,12 +144,12 @@ class _MenuViewState extends State<MenuView> {
                         context: context,
                         barrierDismissible: false,
                         builder: (_) => AlertDialog(
-                          title: Text('Do you want to delete all message?'),
+                          title: Text(AppLocalizations.of(context).localizedValues['del_msg_dialog']),
                           actions: <Widget>[
-                            FlatButton(child: Text('No'),onPressed: () {
+                            FlatButton(child: Text(AppLocalizations.of(context).localizedValues['no']),onPressed: () {
                               Navigator.pop(context);
                             },),
-                            FlatButton(child: Text('Yes'),onPressed: (){
+                            FlatButton(child: Text(AppLocalizations.of(context).localizedValues['yes']),onPressed: (){
                               Provider.of<ChatViewModel>(context, listen: false)
                                   .deleteAllMessage();
                               Navigator.pop(context);

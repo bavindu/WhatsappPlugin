@@ -35,7 +35,7 @@ class _MainViewState extends State<MainView>
       // Replace the testAdUnitId with an ad unit id from the AdMob dash.
       // https://developers.google.com/admob/android/test-ads
       // https://developers.google.com/admob/ios/test-ads
-      adUnitId: InterstitialAd.testAdUnitId,
+      adUnitId: 'ca-app-pub-4106830528171807/6248965308',
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
         if (event == MobileAdEvent.loaded) {
@@ -56,7 +56,7 @@ class _MainViewState extends State<MainView>
     _tabController = TabController(vsync: this, length: 3);
     _tabController.addListener(handleTabChange);
     appInitializer.initialize();
-    if (adLoaded == false) {
+    if (_interstitialAd == null) {
       _interstitialAd = createInterstitialAd()
         ..load()
         ..show(

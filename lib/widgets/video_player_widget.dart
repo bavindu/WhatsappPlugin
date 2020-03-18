@@ -79,17 +79,21 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   Widget videoController() {
     if (!_isPlayed || _isPaused) {
-      return Icon(
+      return Container(
+        decoration: BoxDecoration(color: Colors.grey,borderRadius: new BorderRadius.circular(40.0)),
+        child: Icon(
         Icons.play_arrow,
         size: 80.0,
         color: Colors.white,
-      );
+      ),);
     } else if (_tempPauseDisplay) {
-      return Icon(
+      return Container(
+        decoration: BoxDecoration(color: Colors.grey,borderRadius: new BorderRadius.circular(40.0)),
+        child: Icon(
         Icons.pause,
         size: 80.0,
         color: Colors.white,
-      );
+      ),);
     } else {
       return Container(
         child: null,

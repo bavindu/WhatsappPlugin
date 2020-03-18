@@ -5,9 +5,11 @@ import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -119,6 +121,30 @@ public class MainActivity extends FlutterActivity {
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + getPackageName())));
                         } catch (ActivityNotFoundException e) {
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + getPackageName())));
+                        }
+                        break;
+                    case "invite":
+                        Intent inviteIntent = new Intent();
+                        StringBuilder inviteMessage = new StringBuilder();
+                        inviteMessage.append("Hey, Download this awesome app!");
+                        inviteMessage.append("\n");
+                        inviteMessage.append("https://play.google.com/store/apps/details?id="+getPackageName());
+                        inviteIntent.setAction(Intent.ACTION_SEND);
+                        inviteIntent.putExtra(Intent.EXTRA_TEXT, inviteMessage.toString());
+                        inviteIntent.setType("text/plain");
+                        startActivity(Intent.createChooser(inviteIntent, "Share Via"));
+                        break;
+                    case "mediaScan":
+                        String filePath = methodCall.argument("filePath");
+                        try {
+                            MediaScannerConnection.scanFile(MainActivity.this, new String[] {filePath},new String[] {"image/jpg", "video/mp4"},new MediaScannerConnection.OnScanCompletedListener() {
+
+                                public void onScanCompleted(String path, Uri uri) {
+                                    Log.i("TAG", "Finished scanning " + path);
+                                }
+                            });
+                        } catch (Exception e){
+                            Log.e("MediaScan", e.toString());
                         }
                         break;
                 }

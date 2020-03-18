@@ -17,6 +17,7 @@ class ImagesViewModel with ChangeNotifier {
   List<File> _selectedImageList = List();
   bool _selectingMode = false;
   AppInitializer appInitializer = locator<AppInitializer>();
+  AndroidBridge androidBridge = locator<AndroidBridge>();
   CommonHelperService commonHelperService = locator<CommonHelperService>();
 
   set selectingMode(bool value) {
@@ -119,11 +120,13 @@ class ImagesViewModel with ChangeNotifier {
       String savePath = appDir + '/' + imageName;
       print(savePath);
       try {
-        imageFile.copySync(savePath);
+        File copiedFile = imageFile.copySync(savePath);
+        androidBridge.mediaScan(copiedFile.path);
       } catch (error) {
         if (error is FileSystemException) {
-          new Directory(appDir).create();
-          imageFile.copySync(savePath);
+          new Directory(appDir).createSync();
+          File copiedFile = imageFile.copySync(savePath);
+          androidBridge.mediaScan(copiedFile.path);
         }
       }
     });
@@ -151,7 +154,7 @@ class ImagesViewModel with ChangeNotifier {
       imageFile.copySync(savePath);
     } catch (error) {
       if (error is FileSystemException) {
-        new Directory(appDir).create();
+        new Directory(appDir).createSync();
         imageFile.copy(savePath);
       }
     }

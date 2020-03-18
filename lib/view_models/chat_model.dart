@@ -10,19 +10,19 @@ import 'package:whatsapp_plugin/models/message.dart';
 import 'package:whatsapp_plugin/services/android_bridge.service.dart';
 import 'package:whatsapp_plugin/services/app_initializer.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
+import 'package:whatsapp_plugin/widgets/chat_bubble_container.dart';
 import 'package:whatsapp_plugin/widgets/chat_head_container.dart';
 
 class ChatViewModel with ChangeNotifier {
   List<Message> messageList = [];
   List<ChatHead> chatHeadList = [];
-  List<ChatHeadContainer> chatHeadContainerList = [];
+  List<ChatBubbleContainer> chatBubbleContainerList = [];
   List<ChatBubble> displayChat = [];
   AndroidBridge androidBridge = locator<AndroidBridge>();
   AppInitializer appInitializer = locator<AppInitializer>();
   static const platform = const MethodChannel('androidBridge');
   ViewState viewState = ViewState.Idle;
   bool gotMessages = false;
-  ScrollController scrollController;
 
   ChatViewModel() {
     platform.setMethodCallHandler(methodCallFromAndroid);
@@ -191,7 +191,6 @@ class ChatViewModel with ChangeNotifier {
         ChatBubble chatBubble = new ChatBubble(messageList[i].text,
             messageList[i].sender, time, messageList[i].isGroupMessage);
         displayChat.add(chatBubble);
-        print(chatBubble.date.toString());
       }
     }
     displayChat.sort((ChatBubble chatBubble1, ChatBubble chatBubble2) {

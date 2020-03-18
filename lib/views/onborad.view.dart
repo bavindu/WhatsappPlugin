@@ -68,7 +68,8 @@ class _OnboardViewState extends State<OnboardView> {
                       appInitializer.requestStoragePermission();
                     },
                     child: Text(
-                      'Allow Access',
+                        AppLocalizations.of(context)
+                            .localizedValues['allow_acces']
                     ),
                   ),
                 ),
@@ -82,12 +83,21 @@ class _OnboardViewState extends State<OnboardView> {
                         if (result == true) {
                           Navigator.pushNamed(context, '/');
                         } else {
-                          print('not permited');
+                          showDialog(context: context,builder: (_) => AlertDialog(
+                            title: Text(AppLocalizations.of(context).localizedValues['allow_access_dialog']),
+                            actions: <Widget>[
+                              FlatButton(child: Text(AppLocalizations.of(context).localizedValues['ok']),onPressed: () {
+                                Navigator.pop(context);
+                              },),
+
+
+                            ],
+                          ),);
                         }
                       });
                     },
                     child: Text(
-                      'Next',
+                      AppLocalizations.of(context).localizedValues['next'],
                       style: TextStyle(fontSize: 20.0, color: Colors.white),
                     ),
                   ),

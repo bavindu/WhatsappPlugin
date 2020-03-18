@@ -51,7 +51,6 @@ class _ChatViewState extends State<ChatView> {
                                 ),
                               ),
                               onTap: () {
-                                print('tapped');
                                 Navigator.pushNamed(context, '/chatDisplay',
                                     arguments: new ChatArguments(
                                         chatViewModel

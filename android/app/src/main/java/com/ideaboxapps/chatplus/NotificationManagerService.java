@@ -49,7 +49,11 @@ public class NotificationManagerService extends NotificationListenerService {
                 jsonObject.addProperty("isGroupMessage",wpMessage.getIsGroupMessage());
                 jsonObject.addProperty("text",wpMessage.getText());
                 jsonObject.addProperty("sender",wpMessage.getSender());
-                MainActivity.methodChanel.invokeMethod("getMessage", jsonObject.toString());
+                try {
+                    MainActivity.methodChanel.invokeMethod("getMessage", jsonObject.toString());
+                }catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
                 messageRepositary.insertMessage(wpMessage);
             } else {
                 Log.i("NotficationActual","Already exists ");

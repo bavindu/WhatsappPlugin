@@ -18,10 +18,17 @@ class MainOnBoard extends StatefulWidget {
 
 class _MainOnBoardState extends State<MainOnBoard> {
   AppInitializer appInitializer = locator<AppInitializer>();
+  Future<AppPermissionStatus> _appPermissionStatus;
+
+  @override
+  void initState() {
+    _appPermissionStatus = appInitializer.checkPermission();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: appInitializer.checkPermission(),
+      future: _appPermissionStatus,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data == AppPermissionStatus.Granted) {

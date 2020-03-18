@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:whatsapp_plugin/constants/app-storage.dart';
 import 'package:whatsapp_plugin/constants/view_states.dart';
 import 'package:whatsapp_plugin/models/statusVideo.dart';
+import 'package:whatsapp_plugin/services/android_bridge.service.dart';
 import 'package:whatsapp_plugin/services/app_initializer.dart';
 import 'package:whatsapp_plugin/services/common_helper.service.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
@@ -19,6 +20,7 @@ class VideosViewModel with ChangeNotifier {
   ViewState _videoViewState = ViewState.Idle;
   List<File> get selectedVideoList => _selectedVideoList;
   AppInitializer appInitializer = locator<AppInitializer>();
+  AndroidBridge androidBridge = locator<AndroidBridge>();
   CommonHelperService commonHelperService = locator<CommonHelperService>();
 
 
@@ -43,7 +45,6 @@ class VideosViewModel with ChangeNotifier {
         var fileList = dir.listSync().where((item)=> item.path.endsWith('mp4'));
         if (fileList.length > 0) {
           for(var i = 0; i< fileList.length; i++) {
-            print(fileList.elementAt(i).path);
             _videosList.add(new StatusVideo(fileList.elementAt(i)));
             if(i == fileList.length-1) {
               return true;
@@ -100,11 +101,13 @@ class VideosViewModel with ChangeNotifier {
       String videoName = videoFile.path.split('/').last;
       String savePath = appDir + '/' +videoName;
       try {
-        videoFile.copySync(savePath);
+        File copiedFile = videoFile.copySync(savePath);
+        androidBridge.mediaScan(copiedFile.path);
       } catch (error) {
         if ( error is FileSystemException) {
-          new Directory(appDir).create();
-          videoFile.copySync(savePath);
+          new Directory(appDir).createSync();
+          File copiedFile = videoFile.copySync(savePath);
+          androidBridge.mediaScan(copiedFile.path);
         }
       }
     });

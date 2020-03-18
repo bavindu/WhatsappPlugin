@@ -46,20 +46,17 @@ class _ImagePreviewState extends State<ImagePreview> {
                 child: GestureDetector(
                   onScaleStart: (ScaleStartDetails details){
                     _previousScale = _scale;
-                    print(details);
                     setState(() {
 
                     });
                   },
                   onScaleUpdate: (ScaleUpdateDetails details){
-                    print(details);
                     _scale = _previousScale * details.scale;
                     setState(() {
 
                     });
                   },
                   onScaleEnd: (ScaleEndDetails details) {
-                    print(details);
                     _previousScale = 1.0;
                     _scale = 1.0;
                     setState(() {
@@ -118,7 +115,7 @@ class _ImagePreviewState extends State<ImagePreview> {
                       elevation: 10.0,
                       shape: CircleBorder(side: BorderSide.none),
                       onPressed: () {
-                        commonHelper.saveFile(appInitializer.wpStatusPath,imageFileList[fileIndex].imageFile, context);
+                        commonHelper.saveFile(appInitializer.rootPath,imageFileList[fileIndex].imageFile, context);
                       },
                       child: Container(
                         padding: EdgeInsets.all(2.0),
@@ -174,10 +171,8 @@ class _ImagePreviewState extends State<ImagePreview> {
   }
 
   void imageChang(DragEndDetails dragEndDetails) {
-    print(dragEndDetails.velocity);
     setState(() {
       fileIndex++;
-      print(fileIndex);
     });
   }
 }

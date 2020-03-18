@@ -39,21 +39,25 @@ class _MyAppState extends State<MyApp> {
   BannerAd _bannerAd;
   AppInitializer appInitializer = locator<AppInitializer>();
   double _padding = 0.0;
+  bool _adLoaded = false;
 
   BannerAd _createBannerAd() {
     return BannerAd(
       // Replace the testAdUnitId with an ad unit id from the AdMob dash.
       // https://developers.google.com/admob/android/test-ads
       // https://developers.google.com/admob/ios/test-ads
-      adUnitId: BannerAd.testAdUnitId,
-      size: AdSize.fullBanner,
+      adUnitId: 'ca-app-pub-4106830528171807/8516505847',
+      size: AdSize.banner,
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
-        var pad = 60.0;
-        if (event == MobileAdEvent.failedToLoad) {
+        var pad = 50.0;
+        if (event == MobileAdEvent.failedToLoad && _adLoaded == false) {
           pad = 0.0;
         } else if ( event == MobileAdEvent.loaded) {
-          pad = 60.0;
+          _adLoaded = true;
+          pad = 50.0;
+        } else if ( event == MobileAdEvent.closed) {
+          pad = 0.0;
         }
         setState(() {
           _padding = pad;

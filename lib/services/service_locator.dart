@@ -10,7 +10,10 @@ void setupLocator() {
     final androidBridge = AndroidBridge();
     return androidBridge;
   });
-  locator.registerSingleton(CommonHelperService());
+  locator.registerSingletonAsync<CommonHelperService>(() async {
+    final commonHelperService = CommonHelperService();
+    return commonHelperService;
+  },dependsOn: [AndroidBridge]);
   locator.registerSingletonAsync<AppInitializer>(() async {
     final appInitializer = AppInitializer();
     return appInitializer;
