@@ -137,6 +137,28 @@ class _MenuViewState extends State<MenuView> {
                       ),
                     ),
                   ),
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      splashColor: Colors.tealAccent,
+                      onTap: () {
+                        Navigator.pushNamed(context, '/video_cutter');
+                      },
+                      child: Container(
+                        child: ListTile(
+                          enabled: true,
+                          leading: const Icon(
+                            Icons.switch_video,
+                            color: Colors.white,
+                          ),
+                          title: Text(
+                            AppLocalizations.of(context).localizedValues['video_cutter'],
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   InkWell(
                     splashColor: Colors.lime,
                     onTap: () {

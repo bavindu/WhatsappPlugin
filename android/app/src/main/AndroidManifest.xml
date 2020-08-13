@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ideaboxapps.chatplus">
+    package="com.ideaboxapps.chatplusstatus">
 
     <!--
      io.flutter.app.FlutterApplication is an android.app.Application that
@@ -18,13 +18,13 @@
         android:icon="@mipmap/ic_launcher"
         android:label="Chat Plus">
         <service
-            android:name=".StatusAutoSaveService"
+            android:name="com.ideaboxapps.chatplusstatus.StatusAutoSaveService"
             android:enabled="true"
             android:exported="false"></service>
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4106830528171807~2327868990" />
+            android:value="ca-app-pub-4106830528171807~5149924443" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -37,7 +37,7 @@
         </provider>
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.ideaboxapps.chatplusstatus.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
@@ -62,7 +62,7 @@
         </activity>
 
         <service
-            android:name=".NotificationManagerService"
+            android:name="com.ideaboxapps.chatplusstatus.NotificationManagerService"
             android:label=""
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>

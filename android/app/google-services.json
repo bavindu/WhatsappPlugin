@@ -34,6 +34,35 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315907257847:android:e89904f395e86abfaf2af2",
+        "android_client_info": {
+          "package_name": "com.ideaboxapps.chatplusstatus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315907257847-du42blla41t67ojlpb7pbh61g484a37h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHhlxlqgQGjUl3-vXNi5rckqoioJoPg74"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315907257847-du42blla41t67ojlpb7pbh61g484a37h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

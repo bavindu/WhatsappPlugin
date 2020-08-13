@@ -6,6 +6,7 @@ import 'package:whatsapp_plugin/views/image_preview_view.dart';
 import 'package:whatsapp_plugin/views/mainOnboard.dart';
 import 'package:whatsapp_plugin/views/main_view.dart';
 import 'package:whatsapp_plugin/views/menu_view.dart';
+import 'package:whatsapp_plugin/views/video_cutter_pick.view.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -25,6 +26,9 @@ class Router {
         break;
       case '/faq':
         return SlidePageTransitions(page: FAQView());
+        break;
+      case '/video_cutter':
+        return SlidePageTransitions(page: VideoCutterView());
         break;
       default:
         return MaterialPageRoute(

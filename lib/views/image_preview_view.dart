@@ -38,10 +38,11 @@ class _ImagePreviewState extends State<ImagePreview> {
       builder: (BuildContext context, ImagesViewModel imagesViewModel,
               Widget child) =>
           Scaffold(
+            backgroundColor: Colors.white70,
         body: PageView.builder(
           itemBuilder: (BuildContext context, int index) => Center(
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10.0),
+              padding: EdgeInsets.only(top: 50,bottom: 10),
               child: Center(
                 child: GestureDetector(
                   onScaleStart: (ScaleStartDetails details){

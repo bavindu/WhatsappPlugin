@@ -46,7 +46,7 @@ class _MyAppState extends State<MyApp> {
       // Replace the testAdUnitId with an ad unit id from the AdMob dash.
       // https://developers.google.com/admob/android/test-ads
       // https://developers.google.com/admob/ios/test-ads
-      adUnitId: 'ca-app-pub-4106830528171807/8516505847',
+      adUnitId: BannerAd.testAdUnitId,
       size: AdSize.banner,
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
@@ -69,17 +69,17 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    FirebaseAdMob.instance.initialize(appId: appId);
-    _bannerAd = _createBannerAd()
-      ..load()
-      ..show(
-        // Positions the banner ad 60 pixels from the bottom of the screen
-        anchorOffset: 0.0,
-        // Positions the banner ad 10 pixels from the center of the screen to the right
-        horizontalCenterOffset: 0.0,
-        // Banner Position
-        anchorType: AnchorType.bottom,
-      );
+//    FirebaseAdMob.instance.initialize(appId: appId);
+//    _bannerAd = _createBannerAd()
+//      ..load()
+//      ..show(
+//        // Positions the banner ad 60 pixels from the bottom of the screen
+//        anchorOffset: 0.0,
+//        // Positions the banner ad 10 pixels from the center of the screen to the right
+//        horizontalCenterOffset: 0.0,
+//        // Banner Position
+//        anchorType: AnchorType.bottom,
+//      );
     appInitializer.initialize();
     super.initState();
   }

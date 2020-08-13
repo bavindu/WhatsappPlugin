@@ -26,6 +26,12 @@ class _ImagesViewState extends State<ImagesView> with WidgetsBindingObserver {
     }
   }
 
+  Future<Null> getImages() async{
+    Provider.of<ImagesViewModel>(context, listen: false).getImages();
+    setState(() {});
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ImagesViewModel>(
@@ -39,68 +45,71 @@ class _ImagesViewState extends State<ImagesView> with WidgetsBindingObserver {
                 if (snapshot.data == true) {
                   return Container(
                     child: imageViewModel.imgFileList.length > 0
-                        ? Scrollbar(
-                            child: GridView.builder(
-                              itemCount: imageViewModel.imgFileList.length,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2),
-                              itemBuilder: (BuildContext context, int index) {
-                                return GridTile(
-                                  child: GestureDetector(
-                                    child: Container(
-                                      child: imageViewModel
-                                              .imgFileList[index].isSelected
-                                          ? Stack(
-                                              fit: StackFit.expand,
-                                              children: <Widget>[
-                                                Container(
-                                                  child: Opacity(
-                                                    opacity: 0.5,
-                                                    child: Image.file(
-                                                      imageViewModel
-                                                          .imgFileList[index]
-                                                          .imageFile,
-                                                      fit: BoxFit.cover,
+                        ? RefreshIndicator(
+                            child: Scrollbar(
+                              child: GridView.builder(
+                                itemCount: imageViewModel.imgFileList.length,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return GridTile(
+                                    child: GestureDetector(
+                                      child: Container(
+                                        child: imageViewModel
+                                                .imgFileList[index].isSelected
+                                            ? Stack(
+                                                fit: StackFit.expand,
+                                                children: <Widget>[
+                                                  Container(
+                                                    child: Opacity(
+                                                      opacity: 0.5,
+                                                      child: Image.file(
+                                                        imageViewModel
+                                                            .imgFileList[index]
+                                                            .imageFile,
+                                                        fit: BoxFit.cover,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                Icon(
-                                                  Icons.check,
-                                                  color: Colors.white,
-                                                  size: 80.0,
-                                                )
-                                              ],
-                                            )
-                                          : Image.file(
-                                              imageViewModel
-                                                  .imgFileList[index].imageFile,
-                                              fit: BoxFit.cover,
-                                            ),
-                                      padding: EdgeInsets.all(2.0),
+                                                  Icon(
+                                                    Icons.check,
+                                                    color: Colors.white,
+                                                    size: 80.0,
+                                                  )
+                                                ],
+                                              )
+                                            : Image.file(
+                                                imageViewModel
+                                                    .imgFileList[index]
+                                                    .imageFile,
+                                                fit: BoxFit.cover,
+                                              ),
+                                        padding: EdgeInsets.all(2.0),
+                                      ),
+                                      onTap: () {
+                                        if (imageViewModel.selectingMode) {
+                                          imageViewModel.tapOnImage(index);
+                                        } else {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ImagePreview(
+                                                          index,
+                                                          imageViewModel
+                                                              .imgFileList)));
+                                        }
+                                      },
+                                      onLongPress: () {
+                                        imageViewModel.longPressed(index);
+                                      },
                                     ),
-                                    onTap: () {
-                                      if (imageViewModel.selectingMode) {
-                                        imageViewModel.tapOnImage(index);
-                                      } else {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ImagePreview(
-                                                        index,
-                                                        imageViewModel
-                                                            .imgFileList)));
-                                      }
-                                    },
-                                    onLongPress: () {
-                                      imageViewModel.longPressed(index);
-                                    },
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
-                          )
+                            onRefresh: getImages)
                         : Container(
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 30.0),

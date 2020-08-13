@@ -53,11 +53,13 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white70,
       body: Consumer(
         builder: (BuildContext context, VideosViewModel videosViewModel,
                 Widget child) =>
             PageView.builder(
           itemBuilder: (BuildContext context, int index) => Container(
+            padding: EdgeInsets.only(top: 40, bottom: 10),
             child: FutureBuilder(
                 future: _initializeVideoPlayerFuture,
                 builder: (context, snapshot) {
