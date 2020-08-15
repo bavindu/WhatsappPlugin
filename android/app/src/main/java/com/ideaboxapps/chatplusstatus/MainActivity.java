@@ -56,8 +56,21 @@ public class MainActivity extends FlutterActivity {
                         startActivity(Intent.createChooser(shareIntent, "Share Via"));
                         break;
                     case "shareOnWhatsapp":
-                        Intent shareOnWhatsappIntent = FlutterMessageHandler.getFlutterMessageHandlerInstance().shareOnWhatsapp((String) methodCall.argument("filePath"),getApplicationContext(), (boolean)methodCall.argument("isImage"));
+                        Intent shareOnWhatsappIntent = FlutterMessageHandler.getFlutterMessageHandlerInstance().shareOnWhatsapp(
+                                (String) methodCall.argument("filePath"),
+                                getApplicationContext(),
+                                (boolean)methodCall.argument("isImage")
+                        );
                         startActivity(Intent.createChooser(shareOnWhatsappIntent,"Share"));
+                        break;
+                    case "shareOnWhatsappMulti":
+                        Intent shareOnWhatsappMultiIntent = FlutterMessageHandler.getFlutterMessageHandlerInstance().shareOnWhatsappMulti(
+                                (String) methodCall.argument("directory"),
+                                (String) methodCall.argument("fileName"),
+                                (Integer) methodCall.argument("numOfParts"),
+                                getApplicationContext()
+                                );
+                        startActivity(Intent.createChooser(shareOnWhatsappMultiIntent,"Share"));
                         break;
                     case "startService":
                         if (serviceIntent == null){

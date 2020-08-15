@@ -20,6 +20,10 @@ class AndroidBridge {
   void shareOnWhatsAppImage(String filePath, bool isImage) {
     platform.invokeMethod('shareOnWhatsapp', {'filePath': filePath, 'isImage': isImage});
   }
+
+  void shareOnWhatsAppMulti(String directory, String fileName, int numOfParts) {
+    platform.invokeMethod('shareOnWhatsappMulti', {'directory': directory, 'fileName': fileName, 'numOfParts': numOfParts});
+  }
   
   void deleterAllMessages() {
     platform.invokeMethod('deleteAllMsges');

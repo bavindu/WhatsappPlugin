@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
@@ -10,7 +11,6 @@ import 'package:whatsapp_plugin/services/app_initializer.dart';
 import 'package:whatsapp_plugin/services/common_helper.service.dart';
 import 'package:whatsapp_plugin/services/service_locator.dart';
 import 'package:whatsapp_plugin/view_models/videos_model.dart';
-import 'package:whatsapp_plugin/widgets/video_player_widget.dart';
 
 class VideoPlayerPreview extends StatefulWidget {
   final List _videoList;
@@ -23,6 +23,7 @@ class VideoPlayerPreview extends StatefulWidget {
 class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
   VideoPlayerController _videoPlayerController;
   Future<void> _initializeVideoPlayerFuture;
+  ChewieController _chewieController;
   int fileIndex;
   File videoFile;
   AndroidBridge androidBridge = locator<AndroidBridge>();
@@ -31,22 +32,34 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
 
   @override
   void initState() {
+    super.initState();
     fileIndex = widget._fileIndex;
     initPlayer();
-    super.initState();
   }
 
   void initPlayer() {
     videoFile = widget._videoList[fileIndex].videoFile;
     _videoPlayerController =
         VideoPlayerController.file(File("storage/" + videoFile.path));
-    _initializeVideoPlayerFuture = _videoPlayerController.initialize();
-    _videoPlayerController.setLooping(true);
+    _initializeVideoPlayerFuture = initVideoPlayer();
+  }
+
+  Future<void> initVideoPlayer() async {
+    await _videoPlayerController.initialize();
+    setState(() {
+      _chewieController = ChewieController(
+        videoPlayerController: _videoPlayerController,
+        aspectRatio: _videoPlayerController.value.aspectRatio,
+        autoPlay: true,
+        looping: true,
+      );
+    });
   }
 
   @override
   void dispose() {
     _videoPlayerController.dispose();
+    _chewieController.dispose();
     super.dispose();
   }
 
@@ -65,7 +78,10 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     return Center(
-                      child: VideoPlayerWidget(_videoPlayerController),
+                      // child: ChewiePlayerWidget(_videoPlayerController),
+                      child: Chewie(
+                        controller: _chewieController,
+                      ),
                     );
                   } else {
                     return Center(
@@ -97,7 +113,8 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
                   return MaterialButton(
                     minWidth: 40,
                     onPressed: () {
-                      androidBridge.share(widget._videoList[fileIndex].videoFile.path, false);
+                      androidBridge.share(
+                          widget._videoList[fileIndex].videoFile.path, false);
                     },
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -105,8 +122,7 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
                       children: <Widget>[
                         Icon(Icons.share, color: Colors.white),
                         Text(
-                          AppLocalizations.of(context)
-                              .localizedValues['share'],
+                          AppLocalizations.of(context).localizedValues['share'],
                           style: TextStyle(color: Colors.white),
                         )
                       ],
@@ -120,7 +136,8 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
                     elevation: 10.0,
                     shape: CircleBorder(side: BorderSide.none),
                     onPressed: () {
-                      commonHelperService.saveFile(appInitializer.rootPath,widget._videoList[fileIndex].videoFile, context);
+                      commonHelperService.saveFile(appInitializer.rootPath,
+                          widget._videoList[fileIndex].videoFile, context);
                     },
                     child: Container(
                       padding: EdgeInsets.all(2.0),
@@ -148,7 +165,8 @@ class _VideoPlayerPreviewState extends State<VideoPlayerPreview> {
                   return MaterialButton(
                     minWidth: 40,
                     onPressed: () {
-                      androidBridge.shareOnWhatsAppImage(widget._videoList[fileIndex].videoFile.path, false);
+                      androidBridge.shareOnWhatsAppImage(
+                          widget._videoList[fileIndex].videoFile.path, false);
                     },
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
